@@ -1,0 +1,96 @@
+{
+  "name": "@pith-cms/next",
+  "version": "0.1.0",
+  "description": "Typed server-only Next.js App Router reads, editor, preview, and caching for Pith.",
+  "license": "MIT",
+  "keywords": [
+    "cms",
+    "editor",
+    "nextjs",
+    "react",
+    "app-router",
+    "preview"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "sideEffects": [
+    "./dist/editor.css"
+  ],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./server": {
+      "types": "./dist/server.d.ts",
+      "import": "./dist/server.js",
+      "default": "./dist/server.js"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "import": "./dist/types.js",
+      "default": "./dist/types.js"
+    },
+    "./password": {
+      "types": "./dist/password.d.ts",
+      "import": "./dist/password.js",
+      "default": "./dist/password.js"
+    },
+    "./editor.css": "./dist/editor.css",
+    "./preview": {
+      "types": "./dist/preview-banner.d.ts",
+      "import": "./dist/preview-banner.js",
+      "default": "./dist/preview-banner.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "engines": {
+    "node": ">=24.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frankstevens1/pith-cms.git",
+    "directory": "packages/next"
+  },
+  "homepage": "https://github.com/frankstevens1/pith-cms#readme",
+  "bugs": {
+    "url": "https://github.com/frankstevens1/pith-cms/issues"
+  },
+  "scripts": {
+    "build": "tsup --config tsup.config.ts && cp src/editor.css dist/editor.css",
+    "dev": "tsup --watch & while true; do test src/editor.css -nt dist/editor.css && cp src/editor.css dist/editor.css; sleep 1; done & wait",
+    "lint": "eslint src --max-warnings=0",
+    "test": "vitest run --config vitest.config.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@pith-cms/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "next": "^16.2.10",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "server-only": "^0.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.17",
+    "next": "^16.2.11",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "server-only": "^0.0.1",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10"
+  }
+}

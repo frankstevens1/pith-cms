@@ -1,0 +1,8 @@
+name: Security report redirect
+description: Do not disclose vulnerabilities in public issues.
+title: 'security: private report required'
+labels: [security]
+body:
+  - type: markdown
+    attributes:
+      value: Please do not include vulnerability details here. Use the repository Security tab's **Report a vulnerability** flow instead.

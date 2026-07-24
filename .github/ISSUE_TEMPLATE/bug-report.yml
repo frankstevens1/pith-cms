@@ -1,0 +1,32 @@
+name: Bug report
+description: Report a reproducible Pith defect.
+title: 'bug: '
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Never include passwords, tokens, private keys, session cookies, or private content.
+  - type: input
+    id: versions
+    attributes:
+      label: Pith, Next.js, React, and Node.js versions
+    validations:
+      required: true
+  - type: dropdown
+    id: adapter
+    attributes:
+      label: Repository adapter
+      options: [filesystem, GitHub direct, GitHub pull request, custom]
+    validations:
+      required: true
+  - type: input
+    id: deployment
+    attributes:
+      label: Deployment environment
+      placeholder: Local Node.js, Docker volume, serverless, or self-hosted
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction and redacted error
+    validations:
+      required: true

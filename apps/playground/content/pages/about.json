@@ -1,0 +1,9 @@
+{
+  "title": "Keep content portable.",
+  "slug": "about",
+  "published": true,
+  "seo": {
+    "description": "Typed content, a protected editor, preview, and storage you control for Next.js.",
+    "keywords": ["typescript", "content", "github"]
+  }
+}

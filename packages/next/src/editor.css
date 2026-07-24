@@ -1,0 +1,1181 @@
+[data-theme='light'] {
+  --canvas: #f4f2ed;
+  --ink: #171716;
+  --surface: #fbfaf7;
+  --surface-muted: #ebe9e2;
+  --rule: #bcbab2;
+  --ink-muted: #5f5e59;
+  --accent: #ca4812;
+}
+
+[data-theme='dark'] {
+  --canvas: #1a1a1d;
+  --ink: #e8e6e3;
+  --surface: #252528;
+  --surface-muted: #303034;
+  --rule: #43434a;
+  --ink-muted: #9a9a99;
+  --accent: #e8793e;
+}
+
+.pith-editor {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--canvas, #f4f2ed);
+  color: var(--ink, #171716);
+  font-family: var(--font-mono, ui-monospace, 'SFMono-Regular', Menlo, Monaco, Consolas, monospace);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.pith-editor *,
+.pith-editor *::before,
+.pith-editor *::after {
+  box-sizing: border-box;
+}
+
+.pith-editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 52px;
+  border-bottom: 1px solid var(--rule, #bcbab2);
+  background: var(--surface, #fbfaf7);
+  flex-shrink: 0;
+}
+
+.pith-editor-header a {
+  color: inherit;
+  text-decoration: none;
+  width: 208px;
+}
+
+.pith-editor-header-start,
+.pith-editor-header-end {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pith-editor-header-end {
+  padding-right: 16px;
+}
+
+.pith-editor-wordmark {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.pith-editor-wordmark:hover {
+  color: var(--accent, #ca4812);
+}
+
+.pith-editor-header-start .pith-editor-breadcrumb {
+  padding-left: 16px;
+  border-left: 1px solid var(--rule, #bcbab2);
+}
+
+.pith-editor-preview-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--rule, #bcbab2);
+  border-left: 3px solid var(--accent, #ca4812);
+  background: var(--surface, #fbfaf7);
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.pith-editor-preview-bar-message {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pith-editor-preview-bar-buttons {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.pith-editor-preview-bar-buttons button,
+.pith-editor-preview-bar-buttons a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  min-height: 28px;
+  padding: 0 10px;
+  border: 1px solid var(--rule, #bcbab2);
+  background: transparent;
+  color: var(--ink, #171716);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  margin: 0;
+  vertical-align: middle;
+}
+
+.pith-editor-preview-bar-buttons a:hover,
+.pith-editor-preview-bar-buttons button:hover {
+  border-color: var(--accent, #ca4812);
+  color: var(--accent, #ca4812);
+}
+
+.pith-editor-preview-bar strong {
+  font-weight: 600;
+}
+
+.pith-editor-preview-bar time {
+  color: var(--ink-muted, #5f5e59);
+}
+
+.pith-editor-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.pith-editor-sidebar-toggle {
+  display: none !important;
+}
+
+.pith-editor-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--rule, #bcbab2);
+  background: var(--surface, #fbfaf7);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.pith-editor-sidebar-inner {
+  flex: 1;
+  padding: 20px 0;
+}
+
+.pith-editor-sidebar-label {
+  display: block;
+  padding: 0 16px 8px;
+  color: var(--ink-muted, #5f5e59);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pith-editor-sidebar-collection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 16px;
+  color: var(--ink, #171716);
+  cursor: pointer;
+  font-size: 13px;
+  user-select: none;
+}
+
+.pith-editor-sidebar-collection:hover {
+  color: var(--accent, #ca4812);
+}
+
+.pith-editor-sidebar-collection--active {
+  color: var(--accent, #ca4812);
+  font-weight: 700;
+}
+
+.pith-editor-sidebar-collection-chevron {
+  font-size: 10px;
+  color: var(--ink-muted, #5f5e59);
+  transition: transform 0.15s;
+}
+
+.pith-editor-sidebar-collection-chevron--open {
+  transform: rotate(90deg);
+}
+
+.pith-editor-sidebar-entry {
+  display: block;
+  padding: 4px 16px 4px 28px;
+  color: var(--ink-muted, #5f5e59);
+  text-decoration: none;
+  font-size: 12px;
+}
+
+.pith-editor-sidebar-entry:hover {
+  color: var(--accent, #ca4812);
+}
+
+.pith-editor-sidebar-entry--active {
+  color: var(--ink, #171716);
+  font-weight: 600;
+}
+
+.pith-editor-sidebar-version {
+  padding: 12px 16px;
+  color: color-mix(in srgb, var(--ink-muted, #5f5e59) 60%, transparent);
+  font-size: 10px;
+  border-top: 1px solid var(--rule, #bcbab2);
+}
+
+.pith-editor-main {
+  flex: 1;
+  min-width: 0;
+  padding: 28px 40px 48px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.pith-editor-main::-webkit-scrollbar {
+  display: none;
+}
+
+.pith-editor-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.pith-editor-breadcrumb a {
+  color: var(--ink-muted, #5f5e59);
+  text-decoration: none;
+}
+
+.pith-editor-breadcrumb a:hover {
+  color: var(--ink, #171716);
+}
+
+.pith-editor-breadcrumb-sep {
+  color: var(--rule, #bcbab2);
+  user-select: none;
+}
+
+.pith-editor-breadcrumb-current {
+  color: var(--ink, #171716);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pith-editor h1,
+.pith-editor h2 {
+  margin: 0 0 24px;
+  color: var(--ink, #171716);
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  font-weight: 650;
+  letter-spacing: -0.045em;
+  line-height: 1.04;
+}
+
+.pith-editor h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin-bottom: 32px;
+}
+
+.pith-editor h2 {
+  font-size: 1.6rem;
+}
+
+.pith-editor-collection-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+}
+
+.pith-editor-collection-grid a {
+  display: grid;
+  gap: 4px;
+  padding: 16px;
+  border: 1px solid var(--rule, #bcbab2);
+  background: var(--surface, #fbfaf7);
+  color: inherit;
+  text-decoration: none;
+}
+
+.pith-editor-collection-grid a:hover {
+  border-color: var(--accent, #ca4812);
+}
+
+.pith-editor-collection-grid strong {
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  font-size: 1.1rem;
+}
+
+.pith-editor-collection-grid span {
+  color: var(--ink-muted, #5f5e59);
+  font-size: 12px;
+}
+
+.pith-editor-entry-list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--rule, #bcbab2);
+  background: var(--surface, #fbfaf7);
+}
+
+.pith-editor-entry-list li + li {
+  border-top: 1px solid var(--rule, #bcbab2);
+}
+
+.pith-editor-entry-list a {
+  display: grid;
+  gap: 2px;
+  padding: 12px 16px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.pith-editor-entry-list a:hover {
+  background: var(--surface-muted, #ebe9e2);
+}
+
+.pith-editor-entry-list strong {
+  color: var(--ink, #171716);
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  font-weight: 650;
+  letter-spacing: -0.025em;
+}
+
+.pith-editor-entry-list span,
+.pith-editor-entry-list time {
+  color: var(--ink-muted, #5f5e59);
+  font-size: 12px;
+}
+
+.pith-editor-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule, #bcbab2);
+}
+
+.pith-editor-toolbar a {
+  color: var(--ink-muted, #5f5e59);
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pith-editor-toolbar a:hover {
+  color: var(--ink, #171716);
+}
+
+.pith-editor-form {
+  max-width: none;
+}
+
+.pith-editor-form-body {
+  display: flex;
+  gap: 48px;
+  align-items: start;
+}
+
+.pith-editor-fields {
+  flex: 2;
+  min-width: 0;
+  display: grid;
+  gap: 24px;
+}
+
+.pith-editor-form-sidebar {
+  flex: 1;
+  min-width: 0;
+  position: sticky;
+  top: 0px;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 80px);
+}
+
+.pith-editor-form-sidebar-info {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  font-size: 12px;
+  color: var(--ink-muted, #5f5e59);
+  line-height: 1.55;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.pith-editor-form-sidebar-info::-webkit-scrollbar {
+  display: none;
+}
+
+.pith-editor-form-sidebar-info-schema {
+  display: grid;
+  gap: 4px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule, #bcbab2);
+  font-size: 11px;
+  color: var(--ink-muted, #5f5e59);
+}
+
+.pith-editor-form-sidebar-info-schema span {
+  display: flex;
+  gap: 6px;
+}
+
+.pith-editor-form-sidebar-info-schema strong {
+  color: var(--ink, #171716);
+  font-weight: 600;
+}
+
+.pith-editor-form-sidebar-info-schema a {
+  color: var(--accent, #ca4812);
+  text-decoration: none;
+}
+
+.pith-editor-form-sidebar-info-schema a:hover {
+  text-decoration: underline;
+}
+
+.pith-editor-form-sidebar-footer {
+  flex-shrink: 0;
+  padding-top: 16px;
+  background: var(--canvas, #f4f2ed);
+}
+
+.pith-editor-form-sidebar-description {
+  font-size: 11px;
+  color: var(--ink-muted, #5f5e59);
+  margin: 0 0 8px;
+  line-height: 1.45;
+}
+
+.pith-editor-form-sidebar-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.pith-editor-form-sidebar-actions button {
+  flex: 1;
+}
+
+.pith-editor-fields,
+.pith-editor-form-sidebar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.pith-editor-fields::-webkit-scrollbar,
+.pith-editor-form-sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+.pith-editor-field {
+  display: grid;
+  gap: 6px;
+}
+
+.pith-editor-field label {
+  color: var(--ink-muted, #5f5e59);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pith-editor-field > p {
+  margin: 0;
+  color: var(--ink-muted, #5f5e59);
+  font-size: 12px;
+}
+
+.pith-editor-field input,
+.pith-editor-field textarea,
+.pith-editor-field select,
+.pith-editor-login input {
+  width: 100%;
+  border: 1px solid var(--rule, #bcbab2);
+  padding: 8px 10px;
+  background: var(--code, #1a1a18);
+  color: var(--code-ink, #f2f0e8);
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.pith-editor-field input:focus,
+.pith-editor-field textarea:focus,
+.pith-editor-field select:focus,
+.pith-editor-login input:focus {
+  outline: none;
+  border-color: var(--accent, #ca4812);
+}
+
+.pith-editor-field input::placeholder,
+.pith-editor-field textarea::placeholder {
+  color: var(--ink-muted, #5f5e59);
+  opacity: 0.55;
+}
+
+.pith-editor-field input[type='checkbox'] {
+  accent-color: var(--accent, #ca4812);
+}
+
+.pith-editor-field textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.pith-editor-field select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235f5e59'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+  cursor: pointer;
+}
+
+.pith-editor-field select:focus {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23ca4812'/%3E%3C/svg%3E");
+}
+
+.pith-editor-field option {
+  background: var(--surface, #fbfaf7);
+  color: var(--ink, #171716);
+}
+
+.pith-editor-field-checkbox {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+  cursor: pointer;
+  color: var(--ink, #171716);
+}
+
+.pith-editor-field-checkbox input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent, #ca4812);
+  flex-shrink: 0;
+}
+
+.pith-editor-options {
+  display: grid;
+  gap: 6px;
+}
+
+.pith-editor-options label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+  cursor: pointer;
+}
+
+.pith-editor-options label:hover {
+  color: var(--accent, #ca4812);
+}
+
+.pith-editor-options input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent, #ca4812);
+}
+
+.pith-editor-group {
+  margin: 0;
+  padding: 12px 12px 16px 16px;
+  border: 1px solid var(--rule, #bcbab2);
+  background: var(--surface, #fbfaf7);
+}
+
+.pith-editor-group legend {
+  width: auto;
+  padding: 0;
+  margin: 0;
+  float: none;
+  color: var(--ink-muted, #5f5e59);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pith-editor-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+}
+
+.pith-editor-group-header:hover {
+  color: var(--ink, #171716);
+}
+
+.pith-editor-group-chevron {
+  font-size: 10px;
+  color: var(--ink-muted, #5f5e59);
+  transition: transform 0.15s;
+  margin-left: 8px;
+}
+
+.pith-editor-group-chevron--open {
+  transform: rotate(90deg);
+}
+
+.pith-editor-group-body {
+  display: grid;
+  gap: 16px;
+  padding: 0px 12px 16px 16px;
+}
+
+.pith-editor-group > p {
+  margin: 8px 12px 12px;
+  color: var(--ink-muted, #5f5e59);
+  font-size: 12px;
+}
+
+.pith-editor-group > button[type='button'] {
+  width: 100%;
+  margin-top: 16px;
+}
+
+.pith-editor-list-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--rule, #bcbab2);
+}
+
+.pith-editor-list-item:nth-child(n + 3) {
+  padding-top: 12px;
+}
+
+.pith-editor-list-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.pith-editor-list-item-content {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.pith-editor-list-item-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--rule, #bcbab2);
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.pith-editor-list-item-remove svg {
+  width: 28px;
+  height: 28px;
+  fill: var(--ink-muted, #5f5e59);
+}
+
+.pith-editor-list-item-remove:hover {
+  background: var(--accent, #ca4812);
+  border-color: var(--accent, #ca4812);
+}
+
+.pith-editor-list-item-remove:hover svg {
+  fill: #fff;
+}
+
+.pith-editor-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--rule, #bcbab2);
+}
+
+.pith-editor button,
+.pith-editor-toolbar a:last-child,
+.pith-editor .pith-editor-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--rule, #bcbab2);
+  background: transparent;
+  color: var(--ink, #171716);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  border-radius: 0;
+  margin-top: 12px;
+}
+
+.pith-editor button:hover {
+  border-color: var(--accent, #ca4812);
+  color: var(--accent, #ca4812);
+}
+
+.pith-editor button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.pith-editor button[type='submit'],
+.pith-editor-actions a.primary {
+  background: var(--ink, #171716);
+  color: var(--canvas, #f4f2ed);
+  border-color: var(--ink, #171716);
+}
+
+.pith-editor button[type='submit']:hover,
+.pith-editor-actions a.primary:hover {
+  background: var(--accent, #ca4812);
+  border-color: var(--accent, #ca4812);
+  color: #fff;
+}
+
+.pith-editor button[type='submit']:disabled:hover {
+  background: var(--ink, #171716);
+  border-color: var(--ink, #171716);
+  color: var(--canvas, #f4f2ed);
+  opacity: 0.4;
+}
+
+.pith-editor-danger {
+  color: var(--accent, #ca4812) !important;
+  border-color: var(--accent, #ca4812) !important;
+}
+
+.pith-editor-danger:hover {
+  background: var(--accent, #ca4812) !important;
+  color: #fff !important;
+}
+
+.pith-editor-user button:hover {
+  background: var(--accent, #ca4812) !important;
+  color: #fff !important;
+  border-color: var(--accent, #ca4812) !important;
+}
+
+.pith-editor-alert {
+  padding: 12px;
+  border-left: 3px solid var(--accent, #ca4812);
+  background: var(--surface, #fbfaf7);
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.pith-editor-alert p {
+  margin: 4px 0 0;
+}
+
+.pith-editor-alert a {
+  color: var(--accent, #ca4812);
+  text-underline-offset: 0.2em;
+}
+
+.pith-editor-field-error {
+  color: var(--accent, #ca4812);
+  font-size: 12px;
+  margin: 0;
+}
+
+.pith-editor-preview-action {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-start;
+}
+
+.pith-editor-preview-action button + p {
+  margin: 0;
+  color: var(--ink-muted, #5f5e59);
+  font-size: 11px;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+}
+
+.pith-editor-conflict {
+  padding: 16px;
+  border: 1px solid var(--rule, #bcbab2);
+  border-left: 3px solid #d97706;
+  background: var(--surface, #fbfaf7);
+  margin-bottom: 16px;
+}
+
+.pith-editor-conflict h2 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+.pith-editor-conflict p {
+  margin: 4px 0;
+  font-size: 13px;
+  color: var(--ink-muted, #5f5e59);
+}
+
+.pith-editor-conflict .pith-editor-actions {
+  margin-top: 16px;
+  padding-top: 0;
+  border-top: none;
+}
+
+.pith-editor-conflict-comparison {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule, #bcbab2);
+}
+
+.pith-editor-conflict-comparison h3 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.pith-editor-conflict-comparison dl {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  font-size: 12px;
+}
+
+.pith-editor-conflict-comparison dt {
+  color: var(--ink, #171716);
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.pith-editor-conflict-comparison dt:first-child {
+  margin-top: 0;
+}
+
+.pith-editor-conflict-comparison dd {
+  margin: 0;
+  color: var(--ink-muted, #5f5e59);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 12px;
+  word-break: break-word;
+}
+
+.pith-editor-publication {
+  padding: 16px;
+  border: 1px solid var(--rule, #bcbab2);
+  border-left: 3px solid var(--accent, #ca4812);
+  background: var(--surface, #fbfaf7);
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.pith-editor-publication p {
+  margin: 4px 0;
+  font-size: 12px;
+  color: var(--ink-muted, #5f5e59);
+}
+
+.pith-editor-publication a {
+  color: var(--accent, #ca4812);
+  text-decoration: none;
+}
+
+.pith-editor-publication a:hover {
+  text-decoration: underline;
+}
+
+.pith-editor-delete {
+  padding: 16px;
+  border: 1px solid var(--rule, #bcbab2);
+  border-left: 3px solid var(--accent, #ca4812);
+  background: var(--surface, #fbfaf7);
+  margin-top: 16px;
+}
+
+.pith-editor-delete h2 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+.pith-editor-delete p {
+  margin: 4px 0;
+  font-size: 13px;
+  color: var(--ink-muted, #5f5e59);
+}
+
+.pith-editor-delete .pith-editor-actions {
+  margin-top: 12px;
+  padding-top: 0;
+  border-top: none;
+}
+
+.pith-editor-invalid {
+  margin-top: 24px;
+  padding: 16px;
+  border: 1px solid var(--rule, #bcbab2);
+  border-left: 3px solid var(--accent, #ca4812);
+  background: var(--surface, #fbfaf7);
+}
+
+.pith-editor-invalid h2 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+.pith-editor-invalid p {
+  margin: 4px 0;
+  font-size: 13px;
+  color: var(--ink-muted, #5f5e59);
+}
+
+.pith-editor-invalid code {
+  font-size: 12px;
+}
+
+.pith-editor-invalid ul {
+  margin: 8px 0 0;
+  padding-left: 20px;
+  font-size: 13px;
+  color: var(--ink-muted, #5f5e59);
+}
+
+.pith-editor-invalid li {
+  margin: 4px 0;
+}
+
+.pith-editor-login {
+  display: grid;
+  gap: 16px;
+  width: min(100%, 360px);
+  margin: auto;
+  padding: 40px 32px;
+  border: 1px solid var(--rule, #bcbab2);
+  background: var(--surface, #fbfaf7);
+}
+
+.pith-editor-login-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.pith-editor-login label {
+  color: var(--ink-muted, #5f5e59);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pith-editor-login button {
+  margin-top: 8px;
+}
+
+.pith-editor-user {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 12px;
+  color: var(--ink-muted, #5f5e59);
+  flex-shrink: 0;
+}
+
+.pith-editor-user button {
+  min-height: 28px;
+  padding: 0 8px;
+  font-size: 10px;
+}
+
+.pith-editor-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--rule, #bcbab2);
+  background: transparent;
+  color: var(--ink-muted, #5f5e59);
+  font: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  border-radius: 0;
+}
+
+.pith-editor-theme-toggle:hover {
+  border-color: var(--ink, #171716);
+  color: var(--ink, #171716);
+}
+
+.pith-editor-header-end button {
+  min-height: 28px;
+  padding: 0 8px;
+  font-size: 10px;
+  margin: 0;
+}
+
+.pith-editor a:focus-visible,
+.pith-editor button:focus-visible,
+.pith-editor input:focus-visible,
+.pith-editor textarea:focus-visible,
+.pith-editor select:focus-visible {
+  outline: 2px solid var(--accent, #ca4812);
+  outline-offset: 3px;
+}
+
+.pith-editor ::selection {
+  background: var(--accent, #ca4812);
+  color: #fff;
+}
+
+@keyframes pithSlideDown {
+  from {
+    transform: translateY(-8px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 700px) {
+  .pith-editor-sidebar {
+    display: none;
+    position: fixed;
+    top: 52px;
+    left: 0;
+    right: 0;
+    bottom: auto;
+    z-index: 100;
+    width: auto;
+    max-height: calc(100vh - 52px);
+    overflow-y: auto;
+    border-bottom: 1px solid var(--rule, #bcbab2);
+    border-right: none;
+    padding: 0;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  }
+
+  .pith-editor-sidebar--open {
+    display: block;
+    animation: pithSlideDown 0.15s ease-out;
+  }
+
+  .pith-editor-sidebar-backdrop {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--ink, #171716) 25%, transparent);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    z-index: 0;
+  }
+
+  .pith-editor-sidebar-inner {
+    position: relative;
+    z-index: 1;
+    width: auto;
+    border-right: none;
+    padding: 16px 0;
+  }
+
+  .pith-editor-sidebar-toggle {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 110;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 1px solid var(--rule, #bcbab2);
+    background: var(--surface, #fbfaf7);
+    color: var(--ink, #171716);
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .pith-editor-sidebar-toggle:hover {
+    border-color: var(--ink, #171716);
+    color: var(--ink, #171716);
+  }
+
+  .pith-editor-header-start {
+    padding-left: 44px;
+  }
+
+  .pith-editor-header-start .pith-editor-breadcrumb {
+    display: none;
+  }
+
+  .pith-editor-main {
+    padding: 20px 16px 40px;
+  }
+
+  .pith-editor-collection-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pith-editor-form-body {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .pith-editor-form-sidebar-actions {
+    position: static;
+  }
+}

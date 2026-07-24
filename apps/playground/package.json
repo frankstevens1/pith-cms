@@ -1,0 +1,38 @@
+{
+  "name": "pith-playground",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.7.0"
+  },
+  "scripts": {
+    "build": "next build --webpack",
+    "content:check": "node ./node_modules/@pith-cms/cli/dist/cli.js content check",
+    "dev": "next dev --port 3100",
+    "lint": "eslint app --max-warnings=0",
+    "start": "next start --port 3100",
+    "test": "vitest run --config vitest.config.ts --passWithNoTests",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@pith-cms/core": "workspace:*",
+    "@pith-cms/next": "workspace:*",
+    "@pith-cms/storage-filesystem": "workspace:*",
+    "@pith-cms/storage-github": "workspace:*",
+    "next": "^16.2.11",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "server-only": "^0.0.1"
+  },
+  "devDependencies": {
+    "@pith-cms/cli": "workspace:*",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10"
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "name": "@pith-cms/cli",
+  "version": "0.1.0",
+  "description": "Command-line scaffolding, collection management, content inspection, and diagnostics for Pith.",
+  "license": "MIT",
+  "keywords": [
+    "cms",
+    "cli",
+    "pith",
+    "scaffolding",
+    "collection-management",
+    "content-inspection"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "bin": {
+    "pith": "./dist/cli.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "engines": {
+    "node": ">=24.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frankstevens1/pith-cms.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://github.com/frankstevens1/pith-cms#readme",
+  "bugs": {
+    "url": "https://github.com/frankstevens1/pith-cms/issues"
+  },
+  "scripts": {
+    "build": "tsup --config tsup.config.ts",
+    "dev": "tsup --watch --config tsup.config.ts",
+    "lint": "eslint src --max-warnings=0",
+    "test": "vitest run --config vitest.config.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@pith-cms/core": "workspace:*",
+    "@pith-cms/next": "workspace:*"
+  },
+  "devDependencies": {
+    "@pith-cms/storage-filesystem": "workspace:*",
+    "@pith-cms/storage-github": "workspace:*",
+    "@types/node": "^24.13.3",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10"
+  }
+}

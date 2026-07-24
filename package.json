@@ -1,0 +1,53 @@
+{
+  "name": "pith",
+  "version": "0.0.0",
+  "private": true,
+  "description": "A lightweight, publishable CMS toolkit for Next.js.",
+  "packageManager": "pnpm@11.15.0",
+  "engines": {
+    "node": ">=24.7.0",
+    "pnpm": ">=11.0.0"
+  },
+  "scripts": {
+    "build": "turbo build",
+    "clean": "rm -rf node_modules packages/*/node_modules apps/*/node_modules packages/*/dist .turbo packages/*/.turbo apps/*/.turbo apps/*/.next .pnpm-store .artifacts test-results playwright-report *.tsbuildinfo apps/*/tsconfig.tsbuildinfo",
+    "check:boundaries": "node scripts/verify-package-boundaries.mjs",
+    "check:docs": "node scripts/verify-documentation.mjs",
+    "check:release": "pnpm check:docs && pnpm bundle:report && node scripts/verify-release-readiness.mjs",
+    "changeset": "changeset",
+    "dev": "turbo dev",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "pith:hash-password": "pith auth hash-password",
+    "bundle:report": "node scripts/report-bundles.mjs",
+    "lint": "turbo lint && pnpm check:boundaries",
+    "pack:check": "node scripts/verify-packages.mjs",
+    "release": "pnpm check:release && pnpm pack:check && pnpm --filter @pith-cms/core --filter @pith-cms/next --filter @pith-cms/cli --filter @pith-cms/storage-filesystem --filter @pith-cms/storage-github publish --access public --provenance",
+    "test": "turbo test",
+    "test:compat": "pnpm typecheck && pnpm test",
+    "test:content": "pnpm --filter pith-playground content:check",
+    "test:e2e": "playwright test",
+    "test:playground": "pnpm --filter pith-playground build",
+    "typecheck": "turbo typecheck",
+    "version:packages": "changeset version"
+  },
+  "devDependencies": {
+    "@pith-cms/cli": "workspace:*",
+    "@changesets/cli": "^2.31.1",
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.61.1",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^10.7.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.9.5",
+    "tailwindcss": "^4.3.3",
+    "tsup": "^8.5.1",
+    "turbo": "^2.10.5",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.65.0",
+    "vitest": "^4.1.10"
+  }
+}

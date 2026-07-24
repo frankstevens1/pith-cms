@@ -1,0 +1,37 @@
+# Dependencies and package-manager state
+node_modules/
+.pnpm-store/
+
+# Build output, caches, coverage, and generated artifacts
+.turbo/
+.next/
+dist/
+coverage/
+playwright-report/
+test-results/
+.artifacts/
+*.tsbuildinfo
+*.tgz
+
+# Local environment files and secrets
+.env
+.env.*
+!.env.example
+
+# Logs and local tool state
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.eslintcache
+
+# Operating-system and editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+
+# Deliberately untracked local archive
+/archive/
