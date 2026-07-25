@@ -1,5 +1,13 @@
 # @pith-cms/storage-filesystem
 
+## 0.1.1
+
+### Patch Changes
+
+- cbceb64: Added `filesystemStorageVersion` export for version tracking.
+- Updated dependencies [cbceb64]
+  - @pith-cms/core@0.1.1
+
 ## 0.1.0
 
 ### Minor Changes

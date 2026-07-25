@@ -1,5 +1,11 @@
 # @pith-cms/core
 
+## 0.1.1
+
+### Patch Changes
+
+- cbceb64: Collections now support an optional `order` field that sorts entries. When set, `getEntries` automatically sorts results by the specified field, with numeric comparison for numbers and lexicographic comparison for strings.
+
 ## 0.1.0
 
 ### Minor Changes
