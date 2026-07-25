@@ -1312,6 +1312,84 @@ export function EditorThemeToggle() {
   );
 }
 
+export function MissingThemeScriptBanner({ docsUrl }: { readonly docsUrl?: string }) {
+  const dismissKey = 'pith-editor-theme-banner-dismissed';
+  const [visible, setVisible] = useState(() => {
+    try {
+      return sessionStorage.getItem(dismissKey) !== '1';
+    } catch {
+      return true;
+    }
+  });
+
+  useEffect(() => {
+    const hasTheme = document.documentElement.hasAttribute('data-theme');
+    if (!hasTheme && visible) {
+      setVisible(true);
+    } else if (hasTheme) {
+      setVisible(false);
+      try {
+        sessionStorage.removeItem(dismissKey);
+      } catch {
+        /* noop */
+      }
+    }
+    // Only check on mount
+  }, []);
+
+  if (!visible) {
+    return null;
+  }
+
+  return (
+    <div className="pith-editor-theme-banner">
+      <div className="pith-editor-theme-banner-body">
+        <p>
+          The theme script is not configured — the editor may not render correctly. Add the&nbsp;
+          <code>ThemeScript</code> component to your root layout&rsquo;s <code>&lt;head&gt;</code>:
+        </p>
+        <pre>
+          <code>
+            {'import { ThemeScript } from "./(cms)/_components/theme-script";\n\n'}
+            {'export default function RootLayout({ children }) {\n'}
+            {'  return (\n'}
+            {'    <html lang="en" suppressHydrationWarning>\n'}
+            {'      <head>\n'}
+            {'        <ThemeScript />\n'}
+            {'      </head>\n'}
+            {'      <body>{children}</body>\n'}
+            {'    </html>\n'}
+            {'  );\n'}
+            {'}'}
+          </code>
+        </pre>
+        {docsUrl ? (
+          <p>
+            <a href={docsUrl} target="_blank" rel="noopener">
+              See the documentation
+            </a>
+          </p>
+        ) : null}
+      </div>
+      <button
+        aria-label="Dismiss theme warning"
+        className="pith-editor-theme-banner-dismiss"
+        onClick={() => {
+          setVisible(false);
+          try {
+            sessionStorage.setItem(dismissKey, '1');
+          } catch {
+            /* noop */
+          }
+        }}
+        type="button"
+      >
+        Dismiss
+      </button>
+    </div>
+  );
+}
+
 interface EditorInvalidEntryActionsProps {
   readonly apiBasePath: string;
   readonly basePath: string;

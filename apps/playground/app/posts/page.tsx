@@ -1,5 +1,6 @@
 import { PublicShell } from '../components/public-shell';
 import { pith } from '../../src/lib/pith';
+import { formatDate } from '../../src/lib/format';
 
 export default async function PostsPage() {
   const content = await pith.content.forRequest();
@@ -18,7 +19,9 @@ export default async function PostsPage() {
           {result.entries.map((post) => (
             <a className="public-post-row" href={`/posts/${post.identifier}`} key={post.identifier}>
               <span className="public-post-row-title">{post.value.title}</span>
-              <span className="public-meta">{post.value.publishedAt ?? post.identifier}</span>
+              <span className="public-meta">
+                {post.value.publishedAt ? formatDate(post.value.publishedAt) : post.identifier}
+              </span>
             </a>
           ))}
         </div>

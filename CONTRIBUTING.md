@@ -29,24 +29,62 @@ pnpm test:e2e
 ```
 
 Add targeted tests for non-trivial behavior and update public documentation in the same change.
-User-facing changes to public packages require a Changeset:
-
-```sh
-pnpm changeset
-```
-
-Do not add a Changeset for documentation-only, CI-only, or internal tooling changes unless it affects
-published behavior. Do not include secrets, test credentials, or internal source imports in examples.
+User-facing changes to public packages require a Changeset (see [Releases](#releases)). Do not add
+a Changeset for documentation-only, CI-only, or internal tooling changes. Do not include secrets,
+test credentials, or internal source imports in examples.
 
 ## Pull requests
 
 Keep diffs focused, explain public API and compatibility impact, state the verification run, and call
 out security or deployment implications. Follow the repository pull-request template.
 
+## Releases
+
+### Versioning
+
+Pith starts at `0.1.0`. While major version is zero, breaking stable API changes require a minor
+release, additive changes require a minor release, and fixes require a patch release. Experimental
+APIs, if introduced, use explicit experimental subpaths and may change more quickly.
+
+Every user-facing pull request adds a Changeset:
+
+```sh
+pnpm changeset
+```
+
+The release workflow creates or updates a version pull request with package versions and changelogs.
+Once that pull request is reviewed and merged, the protected workflow verifies the repository, packs
+artifacts, publishes only the five public packages, creates a GitHub release, and uses npm trusted
+publishing/provenance.
+
+### Prereleases
+
+Use a prerelease channel before a stable release:
+
+```sh
+pnpm changeset pre enter next
+pnpm version:packages
+pnpm release --tag next
+```
+
+Do not overwrite a stable tag with a prerelease. Complete a clean external installation using the
+published prerelease before promoting a stable initial release.
+
+### Publication prerequisites
+
+- Confirm the final npm scope and that the publishing account owns it.
+- Set final repository, homepage, and issue URLs in every public manifest.
+- Configure npm trusted publishing for the protected GitHub workflow and package scope.
+- Keep the release working tree clean and committed.
+- Run `pnpm check:release`, `pnpm pack:check`, and the full CI workflow.
+- Review generated changelogs, tarballs, package sizes, and release notes.
+
+### Rollback
+
+Never overwrite an existing npm version. For a defective release, stop promotion, deprecate the
+affected version where appropriate, publish a corrected patch, update release notes, and pin docs or
+examples to a known-good version if needed. Preserve the original Git tag and build evidence.
+
 ## Security reporting
 
-Before making the repository public, a repository administrator must enable GitHub private
-vulnerability reporting in **Settings → Advanced Security → Private vulnerability reporting**.
-Confirm that at least one maintainer watches the repository's **Security alerts** notifications so
-new reports are received. Researchers can then use **Report a vulnerability** from the repository's
-Security tab; do not ask them to open a public issue.
+See [SECURITY.md](./SECURITY.md) for the supported version policy, vulnerability reporting process, and disclosure policy.

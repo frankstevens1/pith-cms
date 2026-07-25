@@ -66,6 +66,15 @@ importers:
 
   apps/docs:
     dependencies:
+      '@pith-cms/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@pith-cms/next':
+        specifier: workspace:*
+        version: link:../../packages/next
+      '@pith-cms/storage-filesystem':
+        specifier: workspace:*
+        version: link:../../packages/storage-filesystem
       next:
         specifier: ^16.2.11
         version: 16.2.11(@playwright/test@1.61.1)(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -84,6 +93,9 @@ importers:
       remark-gfm:
         specifier: ^4.0.1
         version: 4.0.1
+      server-only:
+        specifier: ^0.0.1
+        version: 0.0.1
     devDependencies:
       '@tailwindcss/postcss':
         specifier: ^4.3.3

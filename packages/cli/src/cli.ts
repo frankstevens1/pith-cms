@@ -172,13 +172,18 @@ async function main(): Promise<void> {
       }
 
       case 'auth': {
+        const envFlag = parsed.flags.env === true;
+        const liveFlag = parsed.flags.live === true;
+        const sessionFlag = parsed.flags.session === true;
+        const previewFlag = parsed.flags.preview === true;
+
         switch (parsed.subcommand) {
           case 'hash-password': {
-            await hashPasswordCommand(jsonMode);
+            await hashPasswordCommand({ jsonMode, env: envFlag, live: liveFlag });
             break;
           }
           case 'generate-secret': {
-            generateSecretCommand(jsonMode);
+            generateSecretCommand({ jsonMode, session: sessionFlag, preview: previewFlag });
             break;
           }
           default: {

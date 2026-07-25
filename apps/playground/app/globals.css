@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-@import '@pith-cms/next/editor.css';
 
 @theme {
   --font-sans: ui-sans-serif, system-ui, sans-serif;
@@ -197,6 +196,12 @@ button {
   min-height: 68px;
   color: var(--ink-muted);
   font-size: 12px;
+}
+
+.public-footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
 .public-footer-credit,
@@ -515,6 +520,16 @@ button {
     padding-top: 18px;
   }
 
+  .public-skeleton-row {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .public-skeleton-mockup {
+    flex: none;
+    width: 100%;
+  }
+
   .public-package-row,
   .public-post-row,
   .public-footer-inner {
@@ -522,4 +537,176 @@ button {
     flex-direction: column;
     gap: 4px;
   }
+}
+
+/* Editor mockup */
+
+.public-skeleton-row {
+  display: flex;
+  gap: 48px;
+  margin-top: 32px;
+  align-items: flex-start;
+}
+
+.public-skeleton-mockup {
+  flex: 0 0 58%;
+}
+
+.public-skeleton-desc {
+  flex: 1;
+  padding-top: 8px;
+  color: var(--ink-muted);
+  line-height: 1.65;
+  font-size: 15px;
+  max-width: 38ch;
+}
+
+.public-editor-mockup {
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--canvas);
+  font-size: 13px;
+}
+
+.editor-mockup-terminal {
+  padding: 18px 22px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--code, #1a1a18);
+  color: var(--code-ink, #e8e6e3);
+  font-family: var(--font-mono, monospace);
+  font-size: 12.5px;
+  line-height: 1.8;
+  overflow: hidden;
+}
+
+.terminal-prompt {
+  color: var(--accent);
+}
+
+.terminal-success {
+  color: #22c55e;
+}
+
+.terminal-dim {
+  color: var(--ink-muted);
+}
+
+.terminal-blank {
+  height: 0.6em;
+}
+
+.editor-mockup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 40px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--surface);
+}
+
+.editor-mockup-wordmark {
+  font-weight: 650;
+  color: var(--ink);
+}
+
+.editor-mockup-header-end {
+  display: flex;
+  align-items: center;
+}
+
+.editor-mockup-avatar {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--ink-muted);
+  opacity: 0.35;
+}
+
+.editor-mockup-body {
+  display: flex;
+  min-height: 220px;
+}
+
+.editor-mockup-sidebar {
+  width: 130px;
+  flex-shrink: 0;
+  padding: 14px 0;
+  border-right: 1px solid var(--rule);
+  background: var(--surface);
+}
+
+.editor-mockup-sidebar-label {
+  padding: 0 14px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.editor-mockup-collection-row {
+  padding: 4px 14px;
+  color: var(--ink-muted);
+}
+
+.editor-mockup-collection-row.active {
+  color: var(--ink);
+  background: var(--surface-muted);
+}
+
+.editor-mockup-main {
+  flex: 1;
+  padding: 14px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.editor-mockup-breadcrumb {
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+
+.editor-mockup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.editor-mockup-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.editor-mockup-field-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.editor-mockup-field-input {
+  padding: 6px 8px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  color: var(--ink);
+  background: transparent;
+}
+
+.editor-mockup-field-input.small {
+  font-size: 12px;
+}
+
+.editor-mockup-field-textarea {
+  padding: 6px 8px;
+  height: 60px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  color: var(--ink);
+  background: transparent;
 }

@@ -1,4 +1,4 @@
-import { pith } from '../../../src/lib/pith';
+import { pith } from '../../../../src/lib/pith';
 
 export default function PithEditorPage(props: {
   readonly params: Promise<Record<string, string | readonly string[] | undefined>>;

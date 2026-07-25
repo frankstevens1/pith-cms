@@ -3,7 +3,7 @@ import { defineConfig } from 'tsup';
 export default defineConfig((options) => ({
   clean: !options.watch,
   dts: true,
-  entry: ['src/cli.ts'],
+  entry: ['src/cli.ts', 'src/index.ts'],
   external: [
     '@pith-cms/core',
     '@pith-cms/next',

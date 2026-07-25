@@ -186,12 +186,15 @@ async function directoryAccessible(dirPath: string): Promise<boolean> {
 async function checkEditorSetup(projectRoot: string, appDir: string | null): Promise<boolean> {
   if (!appDir) return false;
 
-  const editorPagePath = resolve(appDir, 'pith', '[[...pithPath]]', 'page.tsx');
-  const editorApiPath = resolve(appDir, 'api', 'pith', '[...pithRoute]', 'route.ts');
-  const editorPageExists = await fsExists(editorPagePath);
-  const editorApiExists = await fsExists(editorApiPath);
+  const legacyPagePath = resolve(appDir, 'pith', '[[...pithPath]]', 'page.tsx');
+  const newPagePath = resolve(appDir, '(cms)', 'pith', '[[...pithPath]]', 'page.tsx');
+  const apiPath = resolve(appDir, 'api', 'pith', '[...pithRoute]', 'route.ts');
 
-  return editorPageExists && editorApiExists;
+  const legacyPageExists = await fsExists(legacyPagePath);
+  const newPageExists = await fsExists(newPagePath);
+  const apiExists = await fsExists(apiPath);
+
+  return (legacyPageExists || newPageExists) && apiExists;
 }
 
 async function checkRepositoryConnectivity(projectRoot: string): Promise<{

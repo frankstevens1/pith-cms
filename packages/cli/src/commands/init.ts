@@ -74,7 +74,7 @@ export async function initCommand(options: InitOptions): Promise<void> {
     /\\/g,
     '/',
   );
-  const editorPageDir = resolve(appDir, 'pith', '[[...pithPath]]');
+  const editorPageDir = resolve(appDir, '(cms)', 'pith', '[[...pithPath]]');
   const pageImportPath = relative(editorPageDir, resolve(libDir, 'pith')).replace(/\\/g, '/');
   const routeDir = resolve(appDir, 'api', 'pith', '[...pithRoute]');
   const routeImportPath = relative(routeDir, resolve(libDir, 'pith')).replace(/\\/g, '/');
@@ -83,6 +83,9 @@ export async function initCommand(options: InitOptions): Promise<void> {
   const libCode = generateLibPith(options.storage, configImportPath);
   const editorPageCode = generateEditorPage(pageImportPath);
   const editorRouteCode = generateEditorRoute(routeImportPath);
+  const themeScriptCode = generateThemeScript();
+  const themeToggleCode = generateThemeToggle();
+  const cmsLayoutCode = generateCmsLayout();
 
   steps.push('Generate pith.config.ts');
   files.push({
@@ -96,9 +99,25 @@ export async function initCommand(options: InitOptions): Promise<void> {
     content: libCode,
   });
 
-  steps.push('Generate editor page route (app/pith/[[...pithPath]]/page.tsx)');
+  steps.push('Generate CMS route group layout (app/(cms)/layout.tsx)');
   files.push({
-    path: resolve(appDir, 'pith', '[[...pithPath]]', 'page.tsx'),
+    path: resolve(appDir, '(cms)', 'layout.tsx'),
+    content: cmsLayoutCode,
+  });
+
+  steps.push('Generate editor theme components (app/(cms)/_components/)');
+  files.push({
+    path: resolve(appDir, '(cms)', '_components', 'theme-script.tsx'),
+    content: themeScriptCode,
+  });
+  files.push({
+    path: resolve(appDir, '(cms)', '_components', 'theme-toggle.tsx'),
+    content: themeToggleCode,
+  });
+
+  steps.push('Generate editor page route (app/(cms)/pith/[[...pithPath]]/page.tsx)');
+  files.push({
+    path: resolve(appDir, '(cms)', 'pith', '[[...pithPath]]', 'page.tsx'),
     content: editorPageCode,
   });
 
@@ -355,6 +374,83 @@ function generateEditorRoute(importPath: string): string {
   ].join('\n');
 }
 
+function generateThemeScript(): string {
+  return [
+    `const script = \`(() => {`,
+    `  try {`,
+    `    const stored = window.localStorage.getItem('pith-editor-theme');`,
+    `    const theme = stored === 'light' || stored === 'dark'`,
+    `      ? stored`,
+    `      : window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';`,
+    `    document.documentElement.dataset.theme = theme;`,
+    `  } catch {`,
+    `    document.documentElement.dataset.theme = 'light';`,
+    `  }`,
+    `})();\`;`,
+    '',
+    `export function ThemeScript() {`,
+    `  return <script dangerouslySetInnerHTML={{ __html: script }} />;`,
+    `}`,
+    '',
+  ].join('\n');
+}
+
+function generateThemeToggle(): string {
+  return [
+    `'use client';`,
+    '',
+    `import { useEffect, useState } from 'react';`,
+    '',
+    `type Theme = 'light' | 'dark';`,
+    '',
+    `const storageKey = 'pith-editor-theme';`,
+    '',
+    `function readTheme(): Theme {`,
+    `  return document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';`,
+    `}`,
+    '',
+    `export function ThemeToggle() {`,
+    `  const [theme, setTheme] = useState<Theme | null>(null);`,
+    '',
+    `  useEffect(() => {`,
+    `    setTheme(readTheme());`,
+    `  }, []);`,
+    '',
+    `  function toggleTheme() {`,
+    `    const nextTheme = readTheme() === 'dark' ? 'light' : 'dark';`,
+    `    document.documentElement.dataset.theme = nextTheme;`,
+    `    window.localStorage.setItem(storageKey, nextTheme);`,
+    `    setTheme(nextTheme);`,
+    `  }`,
+    '',
+    `  return (`,
+    `    <button`,
+    `      aria-label={\`Switch to \${theme === 'dark' ? 'light' : 'dark'} theme\`}`,
+    `      className="pith-cms-theme-toggle"`,
+    `      onClick={toggleTheme}`,
+    `      type="button"`,
+    `    >`,
+    `      {theme ?? '\u2026'}`,
+    `    </button>`,
+    `  );`,
+    `}`,
+    '',
+  ].join('\n');
+}
+
+function generateCmsLayout(): string {
+  return [
+    `import type { ReactNode } from 'react';`,
+    '',
+    `import '@pith-cms/next/editor.css';`,
+    '',
+    `export default function PithLayout({ children }: Readonly<{ children: ReactNode }>) {`,
+    `  return <>{children}</>;`,
+    `}`,
+    '',
+  ].join('\n');
+}
+
 function printPostInit(storage: string): void {
   printLine();
   printLine('Pith initialization complete.');
@@ -377,15 +473,15 @@ function printPostInit(storage: string): void {
   }
 
   printLine();
-  printLine(
-    `  ${storage === 'github' ? '3' : '2'}. Add the editor stylesheet. In your root layout or globals.css:`,
-  );
-  printLine(`       @import '@pith-cms/next/editor.css';`);
+  printLine(`  ${storage === 'github' ? '3' : '2'}. Start your dev server and visit /pith.`);
   printLine();
-  printLine('     The editor ships light and dark themes out of the box. To customize,');
-  printLine('     set CSS custom properties on [data-theme="light"] or [data-theme="dark"].');
+  printLine('     The editor ships light and dark themes. For FOUC-free dark mode, add');
+  printLine('     <ThemeScript /> from ./(cms)/_components/theme-script to your root');
+  printLine('     layout <head> with suppressHydrationWarning on <html>.');
   printLine();
-  printLine(`  ${storage === 'github' ? '4' : '3'}. Start your dev server and visit /pith.`);
+  printLine('     If your root layout has shared UI (navigation, header, footer), move it');
+  printLine('     into an (app) route group. See the quick-start guide for layout patterns:');
+  printLine('     https://pith.dev/docs/quick-start#dark-mode');
   printLine();
   printLine('     Next.js logs API requests in development (including background preview');
   printLine('     polling). These are normal and do not indicate a problem.');

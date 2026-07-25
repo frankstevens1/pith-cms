@@ -3,18 +3,11 @@ import ReactMarkdown from 'react-markdown';
 import rehypeHighlight from 'rehype-highlight';
 import remarkGfm from 'remark-gfm';
 
-import { documentationPages } from '../../src/lib/documentation';
 import { CopyableCodeBlock } from './copyable-code-block';
 
 interface MarkdownDocumentProps {
   readonly source: string;
 }
-
-// Markdown sources link to each other by filename (`./collections.md`), while the
-// docs site routes by slug (`/content`). Resolve filenames through the page registry.
-const slugByFilename: Map<string, string> = new Map(
-  documentationPages.map((page) => [page.filename, page.slug]),
-);
 
 function textFromNode(node: ReactNode): string {
   if (typeof node === 'string' || typeof node === 'number') {
@@ -54,10 +47,7 @@ function normalizeDocumentationLink(href: string | undefined): string | undefine
     return href;
   }
 
-  const filename = href.slice(2);
-  const slug = slugByFilename.get(filename);
-
-  return slug === undefined ? href : `/${slug}`;
+  return `/${href.slice(2, -3)}`;
 }
 
 export function MarkdownDocument({ source }: MarkdownDocumentProps) {

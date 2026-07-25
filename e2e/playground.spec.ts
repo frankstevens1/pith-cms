@@ -7,13 +7,10 @@ const aboutPagePath = resolve(process.cwd(), 'apps/playground/content/pages/abou
 test('the playground renders content through public Pith packages', async ({ page }) => {
   await page.goto('/');
 
-  await expect(
-    page.getByRole('heading', { name: 'Developer-first, Git-backed CMS.' }),
-  ).toBeVisible();
-  await expect(page.getByText('@pith-cms/core', { exact: true })).toBeVisible();
-  await expect(page.getByText('@pith-cms/next', { exact: true })).toBeVisible();
-  await expect(page.getByText('@pith-cms/storage-filesystem', { exact: true })).toBeVisible();
-  await expect(page.getByText('@pith-cms/storage-github', { exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Typed content, plain files.' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Get started' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'View content' })).toBeVisible();
+  await expect(page.locator('pre', { hasText: 'pnpm add @pith-cms/cli' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'datafluent • 2026' })).toHaveAttribute(
     'href',
     'https://www.datafluent.one',
@@ -37,12 +34,14 @@ test('the playground renders content through public Pith packages', async ({ pag
 
   await page.goto('/posts');
   await expect(page.getByRole('heading', { name: 'Notes' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Building Pith' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'A Lightweight CMS' })).toBeVisible();
 
-  await page.goto('/posts/building-pith');
-  await expect(page.getByRole('heading', { name: 'Building Pith' })).toBeVisible();
+  await page.goto('/posts/lightweight-cms');
+  await expect(page.getByRole('heading', { name: 'A Lightweight CMS' })).toBeVisible();
   await expect(
-    page.getByText('Pith starts with a stable content model that stays out of the framework.'),
+    page.getByText(
+      'Content files that live in your repo, with just enough structure to be useful.',
+    ),
   ).toBeVisible();
 
   await page.goto('/posts/missing');
@@ -72,7 +71,7 @@ test('the public Playground remembers its theme choice and offers a copyable ins
   await page.getByRole('button', { name: 'Copy' }).click();
   await expect(page.getByRole('button', { name: 'Copied' })).toBeVisible();
   await expect(page.evaluate(() => navigator.clipboard.readText())).resolves.toContain(
-    '@pith-cms/core',
+    '@pith-cms/cli',
   );
 });
 

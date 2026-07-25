@@ -26,10 +26,10 @@ test('the Markdown docs render copyable code and persist an explicit theme', asy
   await installBlock.getByRole('button', { name: 'Copy' }).click();
   await expect(page.getByRole('button', { name: 'Copied' })).toBeVisible();
   await expect(page.evaluate(() => navigator.clipboard.readText())).resolves.toContain(
-    '@pith-cms/core',
+    '@pith-cms/cli',
   );
 
   await page.getByRole('link', { name: 'collections' }).click();
-  await expect(page).toHaveURL('http://localhost:3101/content');
+  await expect(page).toHaveURL('http://localhost:3101/collections');
   await expect(page.getByRole('heading', { name: 'Collections', exact: true })).toBeVisible();
 });

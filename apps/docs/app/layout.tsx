@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
 import './globals.css';
-import { DocumentationNav } from './components/documentation-nav';
 import { ThemeScript } from './components/theme-script';
 
 export const metadata: Metadata = {
@@ -19,10 +18,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
       <head>
         <ThemeScript />
       </head>
-      <body>
-        <DocumentationNav />
-        <div className="docs-shell">{children}</div>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

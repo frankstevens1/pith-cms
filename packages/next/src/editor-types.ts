@@ -99,6 +99,7 @@ export interface PithEditorOptions {
   readonly siteName?: string;
   readonly trustedOrigins?: readonly string[];
   readonly onAuditEvent?: (event: PithEditorAuditEvent) => void | Promise<void>;
+  readonly docsUrl?: string;
 }
 
 export interface PithEditorPageProps {

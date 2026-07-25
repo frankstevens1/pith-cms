@@ -338,7 +338,7 @@ a {
 }
 
 .docs-content a {
-  color: var(--ink);
+  color: var(--accent);
   text-decoration-color: var(--accent);
   text-decoration-thickness: 1px;
 }
@@ -351,19 +351,14 @@ a {
 }
 
 .docs-content table {
-  display: block;
-  overflow-x: auto;
   width: 100%;
   border-collapse: collapse;
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
   color: var(--ink-muted);
   font-size: 13px;
 }
 
 .docs-content th,
 .docs-content td {
-  min-width: 150px;
   padding: 10px 12px;
   border-bottom: 1px solid var(--rule);
   text-align: left;

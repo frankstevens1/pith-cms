@@ -142,6 +142,18 @@ export function createContentService<TConfig extends PithConfig>({
         }
       }
 
+      if (collection.order) {
+        const field = collection.order;
+        entries.sort((a, b) => {
+          const va = (a.value as Record<string, unknown>)[field];
+          const vb = (b.value as Record<string, unknown>)[field];
+          if (typeof va === 'number' && typeof vb === 'number') {
+            return va - vb;
+          }
+          return String(va ?? '').localeCompare(String(vb ?? ''));
+        });
+      }
+
       return { entries, invalidEntries };
     },
 

@@ -1,9 +1,9 @@
 {
-  "title": "Developer-first, Git-backed CMS.",
+  "title": "Typed content, plain files.",
   "slug": "home",
   "published": true,
   "seo": {
-    "description": "Pith gives Next.js a typed content layer and an editor without taking content out of your repository.",
+    "description": "Pith gives Next.js a typed content layer and an editor — content stays in your repository.",
     "keywords": ["pith", "nextjs", "cms", "content"]
   }
 }

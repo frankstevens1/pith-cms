@@ -11,6 +11,7 @@ export interface CollectionDefinition<TFields extends FieldRecord = FieldRecord>
   // CollectionDefinition<FieldRecord> for generic helpers constrained on it.
   readonly identifierField: string;
   readonly displayField?: string;
+  readonly order?: string;
   readonly fields: TFields;
 }
 
@@ -20,6 +21,7 @@ export interface CollectionDefinitionInput<TFields extends FieldRecord> {
   readonly format: EntryFormat;
   readonly identifierField: Extract<keyof TFields, string>;
   readonly displayField?: Extract<keyof TFields, string>;
+  readonly order?: Extract<keyof TFields, string>;
   readonly fields: TFields;
 }
 

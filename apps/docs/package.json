@@ -2,6 +2,7 @@
   "name": "pith-docs",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "engines": {
     "node": ">=24.7.0"
   },
@@ -14,12 +15,16 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@pith-cms/core": "workspace:*",
+    "@pith-cms/next": "workspace:*",
+    "@pith-cms/storage-filesystem": "workspace:*",
     "next": "^16.2.11",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-markdown": "^10.1.0",
     "rehype-highlight": "^7.0.2",
-    "remark-gfm": "^4.0.1"
+    "remark-gfm": "^4.0.1",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",

@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { PithPreviewBanner } from '@pith-cms/next/preview';
 
-import '@pith-cms/next/editor.css';
 import { pith } from '../src/lib/pith';
 
 export default async function RootLayout({ children }: Readonly<{ children: ReactNode }>) {

@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 
 import { PublicShell } from '../../components/public-shell';
 import { pith } from '../../../src/lib/pith';
+import { formatDate } from '../../../src/lib/format';
 
 interface PostPageProps {
   readonly params: Promise<{ slug: string }>;
@@ -45,7 +46,7 @@ export default async function PostPage({ params }: PostPageProps) {
         </a>
         <h1 className="public-post-title mt-8">{post.value.title}</h1>
         {post.value.publishedAt ? (
-          <p className="public-meta mt-4">{post.value.publishedAt}</p>
+          <p className="public-meta mt-4">{formatDate(post.value.publishedAt)}</p>
         ) : null}
         <div className="public-post-body">{post.value.body}</div>
       </article>

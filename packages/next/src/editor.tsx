@@ -35,6 +35,7 @@ import {
   EditorPreviewControls,
   EditorSidebar,
   EditorThemeToggle,
+  MissingThemeScriptBanner,
   PreviewProvider,
   type EditorField,
 } from './editor-client.js';
@@ -80,6 +81,7 @@ interface ResolvedEditorOptions {
   readonly siteName: string;
   readonly trustedOrigins: readonly string[];
   readonly onAuditEvent: PithEditorOptions['onAuditEvent'];
+  readonly docsUrl?: string;
 }
 
 interface MutationEnvelope {
@@ -108,6 +110,7 @@ export function createEditor<TConfig extends PithConfig>(
       siteName: options.siteName,
       trustedOrigins: options.trustedOrigins,
       ...(options.onAuditEvent === undefined ? {} : { onAuditEvent: options.onAuditEvent }),
+      ...(options.docsUrl === undefined ? {} : { docsUrl: options.docsUrl }),
     },
     ...(dependencies.onCanonicalMutation === undefined
       ? {}
@@ -945,6 +948,9 @@ function EditorShell({
           ) : null}
         </header>
         {user ? <EditorPreviewControls apiBasePath={options.apiBasePath} /> : null}
+        <MissingThemeScriptBanner
+          {...(options.docsUrl === undefined ? {} : { docsUrl: options.docsUrl })}
+        />
         <div className="pith-editor-body">
           {sidebarLinks && user ? (
             <EditorSidebar
@@ -981,6 +987,7 @@ function resolveEditorOptions(options: PithEditorOptions): ResolvedEditorOptions
     'siteName',
     'trustedOrigins',
     'onAuditEvent',
+    'docsUrl',
   ]);
 
   if (Object.keys(options).some((key) => !supported.has(key))) {
@@ -1030,6 +1037,9 @@ function resolveEditorOptions(options: PithEditorOptions): ResolvedEditorOptions
     siteName: options.siteName?.trim() || 'Pith',
     trustedOrigins,
     onAuditEvent: options.onAuditEvent,
+    ...(options.docsUrl !== undefined && typeof options.docsUrl === 'string'
+      ? { docsUrl: options.docsUrl }
+      : {}),
   });
 }
 

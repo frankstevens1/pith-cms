@@ -1,4 +1,4 @@
-import { pith } from '../../../src/lib/pith';
+import { pith } from '../../../../src/lib/pith';
 
 export default async function PithEditorPage(props: {
   readonly params: Promise<Record<string, string | readonly string[] | undefined>>;
@@ -13,6 +13,9 @@ export default async function PithEditorPage(props: {
         <p className="mt-3 text-slate-600">
           Set PITH_PASSWORD_HASH and PITH_SESSION_SECRET to enable the local editor.
         </p>
+        <a className="mt-6 button button-primary" href="/">
+          Go back home
+        </a>
       </main>
     );
   }

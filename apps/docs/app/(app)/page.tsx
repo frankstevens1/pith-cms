@@ -1,8 +1,10 @@
 import Link from 'next/link';
 
-import { documentationPages } from '../src/lib/documentation';
+import { getDocumentationPages } from '../../src/lib/documentation';
 
-export default function DocumentationHomePage() {
+export default async function DocumentationHomePage() {
+  const documentationPages = await getDocumentationPages();
+
   return (
     <main className="docs-page">
       <section className="docs-hero">

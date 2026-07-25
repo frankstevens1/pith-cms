@@ -39,10 +39,10 @@ revalidation interval, explicit invalidation, deployment, or future webhook.
 ## Editor
 
 ```tsx
-// app/layout.tsx
+// app/(cms)/layout.tsx
 import '@pith-cms/next/editor.css';
 
-// app/pith/[[...pithPath]]/page.tsx
+// app/(cms)/pith/[[...pithPath]]/page.tsx
 export default pith.editor.page;
 
 // app/api/pith/[...pithRoute]/route.ts

@@ -1,4 +1,14 @@
+---
+title: Known limitations
+slug: known-limitations
+position: 11
+description: Current scope boundaries and intentional omissions in this release.
+---
+
 # Known limitations
+
+These are intentional scope boundaries for Pith `0.1.x` — not bugs. They may change in future
+releases.
 
 - App Router and Node.js runtime only; no Pages Router, Edge Runtime, browser, or CommonJS support.
 - The filesystem adapter needs persistent writable storage and one coordinated application instance.
@@ -11,3 +21,7 @@
   invalidation.
 - There are no persistent drafts, autosave, media uploads, MDX execution, collaboration, scheduling,
   localization, relations, GitLab/Bitbucket adapters, webhooks, or hosted Pith service.
+
+## Next
+
+- [Public API](./public-api.md) — stable and internal API surfaces.

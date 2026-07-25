@@ -1,6 +1,24 @@
+---
+title: Errors and limits
+slug: errors
+position: 9
+description: Use stable Pith errors and know the boundaries of the current release.
+---
+
 # Errors and limits
 
 Pith errors have stable codes and safe metadata. Handle the code, not a parser or provider message.
+
+```ts
+try {
+  await pith.content.getEntry('pages', 'missing');
+} catch (error) {
+  if (error instanceof PithError && error.code === 'CONTENT_NOT_FOUND') {
+    // return 404
+  }
+  throw error;
+}
+```
 
 | Code                       | Meaning                                      | Usual action                                     |
 | -------------------------- | -------------------------------------------- | ------------------------------------------------ |
@@ -23,9 +41,17 @@ Pith errors have stable codes and safe metadata. Handle the code, not a parser o
 
 ## Limits
 
-- App Router and Node.js runtime only.
-- Filesystem writes need one coordinated application instance and persistent storage.
-- GitHub publishing follows provider permissions, rate limits, and branch protection.
-- Pull-request mode creates one branch and one PR per mutation; it does not merge or clean them up.
-- Preview is authenticated and short lived. The built-in store is single-instance only.
-- Pith has no media handling, MDX execution, persistent drafts, autosave, collaboration, scheduling, relations, localization, webhooks, or hosted control plane.
+| Area      | Limit                                                                                                                                                 |
+| --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Runtime   | App Router and Node.js only. No Pages Router, Edge, or browser support.                                                                               |
+| Storage   | Filesystem needs one coordinated instance with persistent writable disk.                                                                              |
+| GitHub    | Subject to token permissions, rate limits, and branch protection.                                                                                     |
+| GitHub PR | One branch + one PR per mutation. Does not merge or clean them up.                                                                                    |
+| Preview   | Authenticated, short-lived. Built-in store is single-instance only.                                                                                   |
+| Scope     | No media handling, MDX execution, persistent drafts, autosave, collaboration, scheduling, relations, localization, webhooks, or hosted control plane. |
+
+## Next
+
+- [Compatibility](./compatibility.md) — runtimes, frameworks, and deployment environments.
+- [Known limitations](./known-limitations.md) — current scope boundaries and intentional omissions.
+- [Public API](./public-api.md) — stable and internal API surfaces.
