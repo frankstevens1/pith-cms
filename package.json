@@ -29,7 +29,7 @@
     "test:e2e": "playwright test",
     "test:playground": "pnpm --filter pith-playground build",
     "typecheck": "turbo typecheck",
-    "version:packages": "changeset version"
+    "version:packages": "changeset version && git push origin --tags"
   },
   "devDependencies": {
     "@pith-cms/cli": "workspace:*",
