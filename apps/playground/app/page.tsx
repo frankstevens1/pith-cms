@@ -3,7 +3,7 @@ import { PublicShell } from './components/public-shell';
 import { getPublicPage } from '../src/lib/public-pages';
 import { docsUrl } from '../src/lib/site-config';
 
-const installCommand = 'pnpm add @pith-cms/cli\npnpm pith init';
+const installCommand = 'pnpm add @pith-cms/cli@latest\npnpm pith init';
 
 const principles = [
   [

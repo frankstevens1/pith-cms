@@ -21,16 +21,16 @@
     "@pith-cms/storage-filesystem": "workspace:*",
     "@pith-cms/storage-github": "workspace:*",
     "next": "^16.2.11",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7",
+    "react": "^19",
+    "react-dom": "^19",
     "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@pith-cms/cli": "workspace:*",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^24.13.3",
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
     "tailwindcss": "^4.3.3",
     "typescript": "^5.9.3",
     "vitest": "^4.1.10"

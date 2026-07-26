@@ -221,6 +221,11 @@ export function EditorEntryForm({
     [savedValue, value],
   );
   const existing = identifier !== undefined;
+  const dirtyRef = useRef(dirty);
+  const statusRef = useRef(status);
+
+  dirtyRef.current = dirty;
+  statusRef.current = status;
 
   useEffect(() => {
     setValue(cloneValue(initialValue));
@@ -234,7 +239,7 @@ export function EditorEntryForm({
 
   useEffect(() => {
     const onBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (dirty && status !== 'saved') {
+      if (dirtyRef.current && statusRef.current !== 'saved') {
         event.preventDefault();
         event.returnValue = '';
       }
@@ -242,7 +247,7 @@ export function EditorEntryForm({
 
     window.addEventListener('beforeunload', onBeforeUnload);
     return () => window.removeEventListener('beforeunload', onBeforeUnload);
-  }, [dirty, status]);
+  }, []);
 
   async function save(): Promise<void> {
     if (existing && !canUpdate) {
@@ -302,7 +307,7 @@ export function EditorEntryForm({
     router.refresh();
 
     if (!existing) {
-      window.location.assign(
+      router.push(
         `${basePath}/collections/${collection}/${encodeURIComponent(resolvedIdentifier)}`,
       );
       return;
@@ -629,23 +634,31 @@ export function EditorEntryForm({
                 </button>
               ) : null}
             </div>
+            {confirmingDelete ? (
+              <section
+                aria-labelledby="pith-delete-heading"
+                className="pith-editor-delete"
+                role="dialog"
+              >
+                <h2 id="pith-delete-heading">Delete this entry?</h2>
+                <p>This permanently removes the file. This action cannot be undone.</p>
+                <div className="pith-editor-actions">
+                  <button
+                    className="pith-editor-danger"
+                    onClick={() => void deleteEntry()}
+                    type="button"
+                  >
+                    Confirm delete
+                  </button>
+                  <button onClick={() => setConfirmingDelete(false)} type="button">
+                    Cancel
+                  </button>
+                </div>
+              </section>
+            ) : null}
           </div>
         </div>
       </div>
-      {confirmingDelete ? (
-        <section aria-labelledby="pith-delete-heading" className="pith-editor-delete" role="dialog">
-          <h2 id="pith-delete-heading">Delete this entry?</h2>
-          <p>This permanently removes the file. This action cannot be undone.</p>
-          <div className="pith-editor-actions">
-            <button className="pith-editor-danger" onClick={() => void deleteEntry()} type="button">
-              Confirm delete
-            </button>
-            <button onClick={() => setConfirmingDelete(false)} type="button">
-              Cancel
-            </button>
-          </div>
-        </section>
-      ) : null}
     </form>
   );
 }
@@ -1240,7 +1253,7 @@ export function EditorLoginForm({ apiBasePath, returnPath }: EditorLoginFormProp
           {error}
         </p>
       ) : null}
-      <button disabled={!csrfToken || submitting} type="submit">
+      <button disabled={!csrfToken || submitting} suppressHydrationWarning type="submit">
         {submitting ? 'Signing in…' : 'Sign in'}
       </button>
     </form>
@@ -1312,30 +1325,62 @@ export function EditorThemeToggle() {
   );
 }
 
+function Token({
+  kw,
+  str,
+  id,
+  jsx,
+  children,
+}: {
+  readonly kw?: boolean;
+  readonly str?: boolean;
+  readonly id?: boolean;
+  readonly jsx?: boolean;
+  readonly children: ReactNode;
+}) {
+  const className = kw ? 't-kw' : str ? 't-str' : id ? 't-id' : jsx ? 't-jsx' : undefined;
+  return className ? <span className={className}>{children}</span> : <>{children}</>;
+}
+
 export function MissingThemeScriptBanner({ docsUrl }: { readonly docsUrl?: string }) {
   const dismissKey = 'pith-editor-theme-banner-dismissed';
-  const [visible, setVisible] = useState(() => {
-    try {
-      return sessionStorage.getItem(dismissKey) !== '1';
-    } catch {
-      return true;
-    }
-  });
+  const [visible, setVisible] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const snippet = [
+    `import { ThemeScript } from "./(cms)/_components/theme-script";`,
+    '',
+    `export default function RootLayout({ children }) {`,
+    `  return (`,
+    `    <html lang="en" suppressHydrationWarning>`,
+    `      <head>`,
+    `        <ThemeScript />`,
+    `      </head>`,
+    `      <body>{children}</body>`,
+    `    </html>`,
+    `  );`,
+    `}`,
+  ].join('\n');
 
   useEffect(() => {
     const hasTheme = document.documentElement.hasAttribute('data-theme');
-    if (!hasTheme && visible) {
-      setVisible(true);
-    } else if (hasTheme) {
-      setVisible(false);
+    if (!hasTheme) {
       try {
-        sessionStorage.removeItem(dismissKey);
+        if (sessionStorage.getItem(dismissKey) !== '1') {
+          setVisible(true);
+        }
       } catch {
-        /* noop */
+        setVisible(true);
       }
     }
-    // Only check on mount
   }, []);
+
+  const handleCopy = () => {
+    void navigator.clipboard?.writeText(snippet).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
 
   if (!visible) {
     return null;
@@ -1348,21 +1393,39 @@ export function MissingThemeScriptBanner({ docsUrl }: { readonly docsUrl?: strin
           The theme script is not configured — the editor may not render correctly. Add the&nbsp;
           <code>ThemeScript</code> component to your root layout&rsquo;s <code>&lt;head&gt;</code>:
         </p>
-        <pre>
-          <code>
-            {'import { ThemeScript } from "./(cms)/_components/theme-script";\n\n'}
-            {'export default function RootLayout({ children }) {\n'}
-            {'  return (\n'}
-            {'    <html lang="en" suppressHydrationWarning>\n'}
-            {'      <head>\n'}
-            {'        <ThemeScript />\n'}
-            {'      </head>\n'}
-            {'      <body>{children}</body>\n'}
-            {'    </html>\n'}
-            {'  );\n'}
-            {'}'}
-          </code>
-        </pre>
+        <div className="pith-editor-theme-banner-code-wrapper">
+          <pre>
+            <code>
+              <Token kw>import</Token>
+              {' { '}
+              <Token id>ThemeScript</Token>
+              {' } '}
+              <Token str>"./(cms)/_components/theme-script"</Token>
+              {';\n\n'}
+              <Token kw>export default function</Token> <Token id>RootLayout</Token>
+              {'({ children }) {\n'}
+              {'  '}
+              <Token kw>return</Token>
+              {' (\n'}
+              {'    '}
+              <Token jsx>&lt;html lang="en" suppressHydrationWarning&gt;</Token>
+              {'\n      '}
+              <Token jsx>&lt;head&gt;</Token>
+              {'\n        '}
+              <Token jsx>&lt;ThemeScript /&gt;</Token>
+              {'\n      '}
+              <Token jsx>&lt;/head&gt;</Token>
+              {'\n      '}
+              <Token jsx>&lt;body&gt;{'{\\u0063hildren}'}&lt;/body&gt;</Token>
+              {'\n    '}
+              <Token jsx>&lt;/html&gt;</Token>
+              {'\n  );\n}'}
+            </code>
+          </pre>
+          <button className="pith-editor-theme-banner-copy" onClick={handleCopy} type="button">
+            {copied ? 'Copied' : 'Copy'}
+          </button>
+        </div>
         {docsUrl ? (
           <p>
             <a href={docsUrl} target="_blank" rel="noopener">

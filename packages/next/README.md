@@ -4,7 +4,7 @@ Server-only Pith integration for Next.js App Router. Supply a validated Pith con
 `ContentRepository`; this package does not choose storage or render Markdown.
 
 ```sh
-pnpm add @pith-cms/core @pith-cms/next server-only
+pnpm add @pith-cms/core@latest @pith-cms/next@latest server-only
 ```
 
 ```ts

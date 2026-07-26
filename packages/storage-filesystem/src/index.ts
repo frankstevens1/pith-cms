@@ -1,4 +1,6 @@
+import { version } from '../package.json';
+
 export { createFilesystemRepository } from './repository.js';
 export type { FilesystemRepositoryOptions } from './repository.js';
 
-export const filesystemStorageVersion = '0.1.0';
+export const filesystemStorageVersion = version;

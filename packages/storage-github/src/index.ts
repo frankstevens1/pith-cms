@@ -1,3 +1,5 @@
+import { version } from '../package.json';
+
 export { createGitHubRepository } from './repository.js';
 export {
   GitHubApiError,
@@ -26,4 +28,4 @@ export type {
 } from './types.js';
 
 /** The package version marker also serves external integration smoke tests. */
-export const githubStorageVersion = '0.1.0';
+export const githubStorageVersion = version;

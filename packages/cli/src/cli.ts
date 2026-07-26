@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+import { version } from '../package.json';
+
 import { initCommand } from './commands/init.js';
 import { collectionAddCommand } from './commands/collection.js';
 import { contentCheckCommand, contentListCommand, contentReadCommand } from './commands/content.js';
@@ -59,7 +61,7 @@ function isHelp(flags: Record<string, string | boolean>): boolean {
 }
 
 function printHelp(): void {
-  printLine(`Pith CLI v0.1.0
+  printLine(`Pith CLI v${version}
 
 Usage:
   pith <command> [options]

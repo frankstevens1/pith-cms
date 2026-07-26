@@ -18,10 +18,10 @@ Router, Edge Runtime, browsers, React Native, workers, and CommonJS consumers ar
 | pnpm              | `>=11`              |
 | TypeScript        | `>=5.9`             |
 | Next.js           | `16.2.x` App Router |
-| React / React DOM | `19.2.x`            |
+| React / React DOM | `19.x`              |
 
-The exact peer ranges in `@pith-cms/next` are `next@^16.2.10`, `react@^19.2.7`, and
-`react-dom@^19.2.7`. Pith does not bundle those packages.
+The exact peer ranges in `@pith-cms/next` are `next@^16.2.10`, `react@^19`, and
+`react-dom@^19`. Pith does not bundle those packages.
 
 Node.js 24.7 is the minimum because the password-auth reference implementation uses Node's native
 Argon2id.

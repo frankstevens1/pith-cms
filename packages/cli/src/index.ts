@@ -1,1 +1,3 @@
-export const cliVersion = '0.1.0';
+import { version } from '../package.json';
+
+export const cliVersion = version;

@@ -31,10 +31,10 @@ importers:
         specifier: ^24.13.3
         version: 24.13.3
       '@types/react':
-        specifier: ^19.2.17
+        specifier: ^19
         version: 19.2.17
       '@types/react-dom':
-        specifier: ^19.2.3
+        specifier: ^19
         version: 19.2.3(@types/react@19.2.17)
       eslint:
         specifier: ^10.7.0
@@ -52,7 +52,7 @@ importers:
         specifier: ^8.5.1
         version: 8.5.1(jiti@2.7.0)(postcss@8.5.22)(typescript@5.9.3)(yaml@2.9.0)
       turbo:
-        specifier: ^2.10.5
+        specifier: ^2.10.6
         version: 2.10.6
       typescript:
         specifier: ^5.9.3
@@ -79,10 +79,10 @@ importers:
         specifier: ^16.2.11
         version: 16.2.11(@playwright/test@1.61.1)(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react:
-        specifier: ^19.2.7
+        specifier: ^19
         version: 19.2.8
       react-dom:
-        specifier: ^19.2.7
+        specifier: ^19
         version: 19.2.8(react@19.2.8)
       react-markdown:
         specifier: ^10.1.0
@@ -104,10 +104,10 @@ importers:
         specifier: ^24.13.3
         version: 24.13.3
       '@types/react':
-        specifier: ^19.2.17
+        specifier: ^19
         version: 19.2.17
       '@types/react-dom':
-        specifier: ^19.2.3
+        specifier: ^19
         version: 19.2.3(@types/react@19.2.17)
       tailwindcss:
         specifier: ^4.3.3
@@ -137,10 +137,10 @@ importers:
         specifier: ^16.2.11
         version: 16.2.11(@playwright/test@1.61.1)(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react:
-        specifier: ^19.2.7
+        specifier: ^19
         version: 19.2.8
       react-dom:
-        specifier: ^19.2.7
+        specifier: ^19
         version: 19.2.8(react@19.2.8)
       server-only:
         specifier: ^0.0.1
@@ -156,10 +156,10 @@ importers:
         specifier: ^24.13.3
         version: 24.13.3
       '@types/react':
-        specifier: ^19.2.17
+        specifier: ^19
         version: 19.2.17
       '@types/react-dom':
-        specifier: ^19.2.3
+        specifier: ^19
         version: 19.2.3(@types/react@19.2.17)
       tailwindcss:
         specifier: ^4.3.3
@@ -228,16 +228,16 @@ importers:
         specifier: ^24.13.3
         version: 24.13.3
       '@types/react':
-        specifier: ^19.2.17
+        specifier: ^19
         version: 19.2.17
       next:
         specifier: ^16.2.11
         version: 16.2.11(@playwright/test@1.61.1)(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react:
-        specifier: ^19.2.7
+        specifier: ^19
         version: 19.2.8
       react-dom:
-        specifier: ^19.2.7
+        specifier: ^19
         version: 19.2.8(react@19.2.8)
       server-only:
         specifier: ^0.0.1

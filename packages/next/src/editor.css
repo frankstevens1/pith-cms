@@ -936,7 +936,6 @@
   border: 1px solid var(--rule, #bcbab2);
   border-left: 3px solid var(--accent, #ca4812);
   background: var(--surface, #fbfaf7);
-  margin-top: 16px;
 }
 
 .pith-editor-delete h2 {
@@ -1089,6 +1088,7 @@
 .pith-editor-theme-banner-body pre {
   margin: 0 0 8px;
   padding: 10px;
+  padding-right: 52px;
   background: var(--surface, #fbfaf7);
   border: 1px solid var(--rule, #bcbab2);
   border-radius: 3px;
@@ -1100,6 +1100,67 @@
   padding: 0;
   font-size: 11px;
   line-height: 1.6;
+}
+
+.pith-editor-theme-banner-code-wrapper {
+  position: relative;
+}
+
+.pith-editor-theme-banner-copy {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  min-height: 24px;
+  padding: 0 8px;
+  border: 1px solid var(--rule, #bcbab2);
+  border-radius: 3px;
+  background: var(--canvas, #f4f2ed);
+  color: var(--ink-muted, #5f5e59);
+  font: inherit;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.pith-editor-theme-banner-copy:hover {
+  border-color: var(--ink, #171716);
+  color: var(--ink, #171716);
+}
+
+.t-kw {
+  color: #8250df;
+  font-weight: 600;
+}
+
+.t-str {
+  color: #0a3069;
+}
+
+.t-id {
+  color: #1f2328;
+}
+
+.t-jsx {
+  color: #0550ae;
+}
+
+[data-theme='dark'] .t-kw {
+  color: #d2a8ff;
+}
+
+[data-theme='dark'] .t-str {
+  color: #a5d6ff;
+}
+
+[data-theme='dark'] .t-id {
+  color: #e6edf3;
+}
+
+[data-theme='dark'] .t-jsx {
+  color: #79c0ff;
 }
 
 .pith-editor-theme-banner-body a {

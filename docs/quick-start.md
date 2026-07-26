@@ -10,7 +10,7 @@ description: Add Pith to a local App Router site and mount the editor.
 Add the CLI and scaffold a project in two commands:
 
 ```sh
-pnpm add @pith-cms/cli
+pnpm add @pith-cms/cli@latest
 pnpm pith init
 # pnpm pith init --storage github   # GitHub-backed storage
 ```

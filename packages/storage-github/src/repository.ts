@@ -1,6 +1,7 @@
 import { Buffer } from 'node:buffer';
 import { createPrivateKey, randomUUID, sign } from 'node:crypto';
 import type { KeyObject } from 'node:crypto';
+import { version as pkgVersion } from '../package.json';
 
 import {
   ConfigurationError,
@@ -323,7 +324,7 @@ class GitHubClient {
       headers: {
         accept: 'application/vnd.github+json',
         authorization,
-        'user-agent': 'pith-cms/0.1.0',
+        'user-agent': `pith-cms/${pkgVersion}`,
         'x-github-api-version': GITHUB_API_VERSION,
         ...(body === undefined ? {} : { 'content-type': 'application/json' }),
       },

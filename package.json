@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "description": "A lightweight, publishable CMS toolkit for Next.js.",
-  "packageManager": "pnpm@11.15.0",
+  "packageManager": "pnpm@11.17.0+sha512.cca3cea332ad254bb84145f966d19f4879615210346fc92c79a047f23a0d7b3cca3c3792f0076ba1f1831d277efbcf0a9119b31a9a60eca7fb3d6231f331ef72",
   "engines": {
     "node": ">=24.7.0",
     "pnpm": ">=11.0.0"
@@ -32,20 +32,20 @@
     "version:packages": "changeset version && git push origin --tags"
   },
   "devDependencies": {
-    "@pith-cms/cli": "workspace:*",
     "@changesets/cli": "^2.31.1",
     "@eslint/js": "^10.0.1",
+    "@pith-cms/cli": "workspace:*",
     "@playwright/test": "^1.61.1",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^24.13.3",
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
     "eslint": "^10.7.0",
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.9.5",
     "tailwindcss": "^4.3.3",
     "tsup": "^8.5.1",
-    "turbo": "^2.10.5",
+    "turbo": "^2.10.6",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.65.0",
     "vitest": "^4.1.10"

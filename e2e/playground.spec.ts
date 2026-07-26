@@ -10,7 +10,7 @@ test('the playground renders content through public Pith packages', async ({ pag
   await expect(page.getByRole('heading', { name: 'Typed content, plain files.' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Get started' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'View content' })).toBeVisible();
-  await expect(page.locator('pre', { hasText: 'pnpm add @pith-cms/cli' })).toBeVisible();
+  await expect(page.locator('pre', { hasText: 'pnpm add @pith-cms/cli@latest' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'datafluent • 2026' })).toHaveAttribute(
     'href',
     'https://www.datafluent.one',

@@ -5,7 +5,7 @@ Command-line scaffolding, collection management, content inspection, and diagnos
 ## Installation
 
 ```bash
-pnpm add -D @pith-cms/cli
+pnpm add -D @pith-cms/cli@latest
 ```
 
 ## Commands

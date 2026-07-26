@@ -10,7 +10,7 @@ description: Scaffold projects, manage collections, inspect content, and diagnos
 `@pith-cms/cli` scaffolds projects, manages collections, inspects content, and diagnoses setup.
 
 ```sh
-pnpm add -D @pith-cms/cli
+pnpm add -D @pith-cms/cli@latest
 ```
 
 The `pith` binary runs through `pnpm pith`.

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { version } from '../package.json';
 
 import {
   ContentNotFoundError,
@@ -11,7 +12,7 @@ import {
 
 describe('@pith-cms/core public export', () => {
   it('exposes the package version marker', () => {
-    expect(pithVersion).toBe('0.1.0');
+    expect(pithVersion).toBe(version);
   });
 
   it('exposes the public configuration API', () => {

@@ -133,12 +133,12 @@ export async function initCommand(options: InitOptions): Promise<void> {
     content: '',
   });
 
-  installPackages.push('@pith-cms/core', '@pith-cms/next', 'server-only');
+  installPackages.push('@pith-cms/core@latest', '@pith-cms/next@latest', 'server-only');
 
   if (options.storage === 'github') {
-    installPackages.push('@pith-cms/storage-github');
+    installPackages.push('@pith-cms/storage-github@latest');
   } else {
-    installPackages.push('@pith-cms/storage-filesystem');
+    installPackages.push('@pith-cms/storage-filesystem@latest');
   }
 
   const envExamplePath = resolve(projectRoot, '.env.example');
@@ -194,7 +194,7 @@ function generatePithConfig(): string {
     `import { defineCollection, definePith, field } from '@pith-cms/core';`,
     '',
     `// ═══════════════════════════════════════════════════════════`,
-    `// Managed by @pith-cms/cli — do not edit collection markers`,
+    `// Pith collection configuration`,
     `// ═══════════════════════════════════════════════════════════`,
     '',
     `export const pith = definePith({`,

@@ -1,3 +1,5 @@
+import { version } from '../package.json';
+
 export { defineCollection } from './collection.js';
 export type {
   CollectionDefinition,
@@ -105,4 +107,4 @@ export { validateEntry } from './validation.js';
 export type { ValidationError, ValidationResult } from './validation.js';
 
 /** The package version marker also serves external integration smoke tests. */
-export const pithVersion = '0.1.0';
+export const pithVersion = version;

@@ -8,7 +8,7 @@ Markdown in your repository, and add a protected editor when the site needs one.
 ## Install
 
 ```sh
-pnpm add @pith-cms/core @pith-cms/next @pith-cms/storage-filesystem next react react-dom server-only
+pnpm add @pith-cms/core@latest @pith-cms/next@latest @pith-cms/storage-filesystem@latest next react react-dom server-only
 ```
 
 Start with the [quick start](docs/quick-start.md). It defines a collection, mounts `/pith`, and
