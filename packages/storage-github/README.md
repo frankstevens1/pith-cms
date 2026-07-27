@@ -33,5 +33,5 @@ The adapter is Node.js-only and works from serverless because it calls GitHub di
 unsafe paths, directories, unsupported Git object types, binary content, and oversized files.
 
 Use `await repository.verifyConnection()` in a server-side diagnostic when you need to check the
-repository, branch, and capabilities. See the [storage guide](../../docs/storage.md) for deployment
+repository, branch, and capabilities. See the [storage guide](../../apps/docs/content/docs/storage.md) for deployment
 and preview constraints.

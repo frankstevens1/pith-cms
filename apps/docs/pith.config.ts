@@ -1,7 +1,7 @@
 import { defineCollection, definePith, field } from '@pith-cms/core';
 
 export default definePith({
-  contentRoot: 'pith-cms',
+  contentRoot: 'content',
   collections: {
     docs: defineCollection({
       path: 'docs',

@@ -23,4 +23,4 @@ durable for serverless, Edge, read-only, or uncoordinated multi-replica writes.
 
 > The filesystem adapter requires persistent writable storage for content mutations.
 
-See the [storage guide](../../docs/storage.md) for choosing an adapter.
+See the [storage guide](../../apps/docs/content/docs/storage.md) for choosing an adapter.

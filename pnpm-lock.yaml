@@ -75,6 +75,9 @@ importers:
       '@pith-cms/storage-filesystem':
         specifier: workspace:*
         version: link:../../packages/storage-filesystem
+      '@pith-cms/storage-github':
+        specifier: workspace:*
+        version: link:../../packages/storage-github
       next:
         specifier: ^16.2.11
         version: 16.2.11(@playwright/test@1.61.1)(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)

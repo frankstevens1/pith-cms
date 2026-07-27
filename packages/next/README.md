@@ -73,4 +73,4 @@ private, noindex, and short lived. The built-in memory store is for one process 
 `PithPreviewStore` across replicas.
 
 Pith runs on the Node.js runtime. Filesystem-backed runtime writes need persistent storage. See the
-[Pith guides](../../docs/quick-start.md) for setup, security, storage, and deployment limits.
+[Pith guides](../../apps/docs/content/docs/quick-start.md) for setup, security, storage, and deployment limits.

@@ -11,7 +11,7 @@ Markdown in your repository, and add a protected editor when the site needs one.
 pnpm add @pith-cms/core@latest @pith-cms/next@latest @pith-cms/storage-filesystem@latest next react react-dom server-only
 ```
 
-Start with the [quick start](docs/quick-start.md). It defines a collection, mounts `/pith`, and
+Start with the [quick start](apps/docs/content/docs/quick-start.md). It defines a collection, mounts `/pith`, and
 reads a page in a Server Component.
 
 ## Packages
@@ -56,14 +56,14 @@ pull requests describe repository state; Pith never claims a site has deployed.
 
 ## Documentation
 
-- [Quick start](docs/quick-start.md)
-- [Collections](docs/collections.md)
-- [Editor and preview](docs/editor.md)
-- [Storage and publishing](docs/storage.md)
-- [CLI](docs/cli.md)
-- [Troubleshooting](docs/troubleshooting.md)
-- [Errors and limits](docs/errors.md)
-- [Migrations](docs/migrations.md)
+- [Quick start](apps/docs/content/docs/quick-start.md)
+- [Collections](apps/docs/content/docs/collections.md)
+- [Editor and preview](apps/docs/content/docs/editor.md)
+- [Storage and publishing](apps/docs/content/docs/storage.md)
+- [CLI](apps/docs/content/docs/cli.md)
+- [Troubleshooting](apps/docs/content/docs/troubleshooting.md)
+- [Errors and limits](apps/docs/content/docs/errors.md)
+- [Migrations](apps/docs/content/docs/migrations.md)
 
 ## Development
 

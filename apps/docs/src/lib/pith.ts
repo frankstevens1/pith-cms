@@ -1,9 +1,8 @@
 import 'server-only';
 
-import { resolve } from 'node:path';
-
 import { createPith, createPasswordAuth } from '@pith-cms/next/server';
 import { createFilesystemRepository } from '@pith-cms/storage-filesystem';
+import { createGitHubRepository } from '@pith-cms/storage-github';
 
 import config from '../../pith.config';
 
@@ -16,11 +15,40 @@ const auth =
       })
     : undefined;
 
+const repository =
+  process.env.PITH_REPOSITORY_PROVIDER === 'github'
+    ? createGitHubRepository({
+        owner: requiredEnvironment('PITH_GITHUB_OWNER'),
+        repository: requiredEnvironment('PITH_GITHUB_REPOSITORY'),
+        branch: process.env.PITH_GITHUB_BRANCH ?? 'main',
+        auth: process.env.PITH_GITHUB_TOKEN
+          ? { token: process.env.PITH_GITHUB_TOKEN }
+          : {
+              app: {
+                appId: requiredEnvironment('PITH_GITHUB_APP_ID'),
+                privateKey: requiredEnvironment('PITH_GITHUB_APP_PRIVATE_KEY'),
+                installationId: requiredEnvironment('PITH_GITHUB_INSTALLATION_ID'),
+              },
+            },
+        publishing: { mode: 'direct' },
+      })
+    : createFilesystemRepository({
+        rootDirectory: process.cwd(),
+      });
+
+function requiredEnvironment(name: string): string {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(
+      `${name} is required for GitHub storage. Set it in the hosting platform environment variables.`,
+    );
+  }
+  return value;
+}
+
 export const pith = createPith({
   config,
-  repository: createFilesystemRepository({
-    rootDirectory: resolve(process.cwd(), '../../..'),
-  }),
+  repository,
   ...(auth
     ? {
         auth,

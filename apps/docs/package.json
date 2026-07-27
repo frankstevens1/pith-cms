@@ -18,6 +18,7 @@
     "@pith-cms/core": "workspace:*",
     "@pith-cms/next": "workspace:*",
     "@pith-cms/storage-filesystem": "workspace:*",
+    "@pith-cms/storage-github": "workspace:*",
     "next": "^16.2.11",
     "react": "^19",
     "react-dom": "^19",

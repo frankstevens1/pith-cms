@@ -6,7 +6,7 @@ Files-first CMS toolkit for Next.js App Router. pnpm + Turborepo monorepo, ESM-o
 
 - `packages/` — publishable packages: `@pith-cms/core` (content model, validation, serialization, repository contracts), `@pith-cms/next` (Next.js reads, editor, preview), `@pith-cms/cli`, `@pith-cms/storage-filesystem`, `@pith-cms/storage-github`.
 - `apps/playground` — dev/demo Next.js app (port 3100) with real content in `apps/playground/content`; used by e2e and `test:content`.
-- `apps/docs` — docs site (port 3101) rendering the Markdown in `docs/`.
+- `apps/docs` — docs site (port 3101) rendering the Markdown in `apps/docs/content/docs/`.
 - `tests/repository-contract.ts` — shared behavioral contract every storage adapter must pass; both adapters import it from their `test/` dirs. New adapters must run it too.
 - `tests/package-smoke` — fixture consumed by `pnpm pack:check`.
 - `tooling/` — shared tsconfig and eslint config.
@@ -30,6 +30,6 @@ Files-first CMS toolkit for Next.js App Router. pnpm + Turborepo monorepo, ESM-o
 - Prettier is enforced (`pnpm format`); eslint requires separate `import type` statements (`consistent-type-imports`, `fixStyle: separate-type-imports`).
 - Packages are built with tsup; `@pith-cms/next`'s build additionally copies `src/editor.css` into `dist/` — `pack:check` asserts it ships.
 - User-facing changes to published packages need a Changeset (`pnpm changeset`); docs/CI/tooling-only changes do not.
-- Public API or behavior changes must update `docs/` in the same change (CI runs `check:docs`).
+- Public API or behavior changes must update `content/docs/` in the same change (CI runs `check:docs`).
 - Storage adapters implement only the `ContentRepository` contract from `@pith-cms/core`; keep adapter-specific behavior in the adapter, semantics in core.
 - No telemetry, no CommonJS, no Edge/browser runtime targets — don't add them.
