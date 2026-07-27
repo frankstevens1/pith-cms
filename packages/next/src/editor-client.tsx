@@ -88,6 +88,7 @@ async function disablePreview(
     previewWindowRef.current?.close();
     previewWindowRef.current = null;
     setPreview({ url: null, expiresAt: null });
+    window.focus();
   }
 }
 
@@ -342,6 +343,7 @@ export function EditorEntryForm({
     previewWindowRef.current?.close();
     previewWindowRef.current = null;
     setPreview({ url: null, expiresAt: null });
+    window.focus();
     router.refresh();
 
     if (!existing) {
