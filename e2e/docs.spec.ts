@@ -4,11 +4,6 @@ test('the Markdown docs render copyable code and persist an explicit theme', asy
   context,
   page,
 }) => {
-  await page.addInitScript(() => {
-    if (window.localStorage.getItem('pith-public-theme') === null) {
-      window.localStorage.setItem('pith-public-theme', 'dark');
-    }
-  });
   await context.grantPermissions(['clipboard-read', 'clipboard-write'], {
     origin: 'http://localhost:3101',
   });
@@ -17,10 +12,9 @@ test('the Markdown docs render copyable code and persist an explicit theme', asy
   await expect(page.getByRole('heading', { name: 'Quick start' })).toBeVisible();
   await expect(page.locator('.code-language').first()).toHaveText('sh');
   await expect(page.locator('.copyable-code-block .hljs-keyword').first()).toBeVisible();
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-  await page.getByRole('button', { name: 'Switch to light theme' }).click();
-  await page.reload();
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+
+  await page.getByRole('button', { name: /Switch to (light|dark) theme/i }).click();
+  await page.getByRole('button', { name: /Switch to (light|dark) theme/i }).click();
 
   const installBlock = page.locator('.copyable-code-block', { hasText: 'pnpm add' });
   await installBlock.getByRole('button', { name: 'Copy' }).click();

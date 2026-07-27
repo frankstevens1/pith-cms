@@ -16,7 +16,8 @@ releases.
 - Pull-request mode creates one branch and one pull request for each mutation; it does not merge,
   reuse, or clean them up.
 - Pith reports repository state, not hosting-provider deployment completion.
-- The in-memory preview store is single-instance only; use a shared custom store across replicas.
+- The in-memory preview store is single-instance only; use a shared store (e.g. Redis)
+  across replicas. See [Editor and preview](./editor.md#preview-store).
 - External content changes can remain in persistent cache until its revalidation period or an explicit
   invalidation.
 - There are no persistent drafts, autosave, media uploads, MDX execution, collaboration, scheduling,

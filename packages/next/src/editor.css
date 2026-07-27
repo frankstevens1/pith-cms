@@ -111,36 +111,6 @@
   flex-shrink: 0;
 }
 
-.pith-editor-preview-bar-buttons button,
-.pith-editor-preview-bar-buttons a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 28px;
-  min-height: 28px;
-  padding: 0 10px;
-  border: 1px solid var(--rule, #bcbab2);
-  background: transparent;
-  color: var(--ink, #171716);
-  font: inherit;
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  text-decoration: none;
-  white-space: nowrap;
-  cursor: pointer;
-  margin: 0;
-  vertical-align: middle;
-}
-
-.pith-editor-preview-bar-buttons a:hover,
-.pith-editor-preview-bar-buttons button:hover {
-  border-color: var(--accent, #ca4812);
-  color: var(--accent, #ca4812);
-}
-
 .pith-editor-preview-bar strong {
   font-weight: 600;
 }
@@ -767,6 +737,48 @@
 .pith-editor button:disabled {
   cursor: not-allowed;
   opacity: 0.4;
+}
+
+.pith-editor .pith-editor-preview-bar-buttons button,
+.pith-editor .pith-editor-preview-bar-buttons a {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  min-height: 28px;
+  padding: 0 10px;
+  border: 1px solid var(--rule, #bcbab2);
+  background: transparent;
+  color: var(--ink, #171716);
+  font: inherit;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  margin: 0;
+  box-sizing: border-box;
+  vertical-align: middle;
+}
+.pith-editor .pith-editor-preview-bar-buttons button::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+.pith-editor .pith-editor-preview-bar-buttons button:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+.pith-editor .pith-editor-preview-bar-buttons a:hover,
+.pith-editor .pith-editor-preview-bar-buttons button:not(:disabled):hover {
+  border-color: var(--accent, #ca4812);
+  color: var(--accent, #ca4812);
 }
 
 .pith-editor button[type='submit'],

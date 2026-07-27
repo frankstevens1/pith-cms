@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 type Theme = 'light' | 'dark';
 
@@ -11,11 +11,10 @@ function readTheme(): Theme {
 }
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme | null>(null);
-
-  useEffect(() => {
-    setTheme(readTheme());
-  }, []);
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window === 'undefined') return 'light';
+    return readTheme();
+  });
 
   function toggleTheme() {
     const nextTheme = readTheme() === 'dark' ? 'light' : 'dark';
@@ -31,7 +30,7 @@ export function ThemeToggle() {
       onClick={toggleTheme}
       type="button"
     >
-      Theme: {theme ?? '…'}
+      Theme: {theme}
     </button>
   );
 }
