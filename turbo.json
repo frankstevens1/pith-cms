@@ -1,5 +1,6 @@
 {
   "$schema": "https://v2-10-7.turborepo.dev/schema.json",
+  "globalEnv": ["PITH_*", "NEXT_PUBLIC_PITH_*"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

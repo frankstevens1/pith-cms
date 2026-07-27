@@ -22,6 +22,20 @@ These are the core variables Pith reads at runtime:
 
 When using GitHub storage, also set `PITH_GITHUB_OWNER`, `PITH_GITHUB_REPOSITORY`, `PITH_GITHUB_BRANCH`, and `PITH_GITHUB_TOKEN`. See [Storage](./storage.md) for the full set of GitHub variables.
 
+### Turborepo
+
+When deploying with Turborepo (e.g. on Vercel with a monorepo), environment variables must be explicitly declared or Turbo will strip them from the build. Add a `globalEnv` entry in `turbo.json`:
+
+```json
+{
+  "globalEnv": ["PITH_*", "NEXT_PUBLIC_PITH_*"]
+}
+```
+
+Without this, Turbo warns that the variables are set on the platform but missing from `turbo.json`, and your application build will not see them.
+
+### Generating secrets
+
 Generate secrets with the CLI (never paste hand-typed values):
 
 ```sh
