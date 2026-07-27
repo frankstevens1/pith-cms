@@ -46,9 +46,9 @@ disappear.
 
 ## Preview
 
-| Problem                       | Check                                                                          |
-| ----------------------------- | ------------------------------------------------------------------------------ |
-| Preview expires or disappears | Configure a valid preview secret. Use a shared store outside a single process. |
+| Problem                       | Check                                                                                                                                     |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Preview expires or disappears | Use a shared Redis-backed preview store. Set `REDIS_URL` to a shared Redis instance. See [Editor and preview](./editor.md#preview-store). |
 
 See [errors](./errors.md) for stable codes and retry guidance.
 

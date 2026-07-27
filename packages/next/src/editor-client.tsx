@@ -25,14 +25,26 @@ const PreviewContext = createContext<{
   readonly preview: PreviewState;
   readonly setPreview: SetPreview;
   readonly previewWindowRef: MutableRefObject<Window | null>;
+  readonly isPreviewDirty: boolean;
+  readonly setIsPreviewDirty: Dispatch<SetStateAction<boolean>>;
+  readonly updatePreviewRef: MutableRefObject<(() => void) | null>;
 } | null>(null);
 
 export function PreviewProvider({ children }: { readonly children: ReactNode }) {
   const [preview, setPreview] = useState<PreviewState>({ url: null, expiresAt: null });
+  const [isPreviewDirty, setIsPreviewDirty] = useState(false);
   const previewWindowRef = useRef<Window | null>(null);
+  const updatePreviewRef = useRef<(() => void) | null>(null);
   const value = useMemo(
-    () => ({ preview, setPreview, previewWindowRef }),
-    [preview, previewWindowRef],
+    () => ({
+      preview,
+      setPreview,
+      previewWindowRef,
+      isPreviewDirty,
+      setIsPreviewDirty,
+      updatePreviewRef,
+    }),
+    [preview, previewWindowRef, isPreviewDirty, updatePreviewRef],
   );
   return <PreviewContext.Provider value={value}>{children}</PreviewContext.Provider>;
 }
@@ -41,6 +53,9 @@ export function usePreview(): {
   readonly preview: PreviewState;
   readonly setPreview: SetPreview;
   readonly previewWindowRef: MutableRefObject<Window | null>;
+  readonly isPreviewDirty: boolean;
+  readonly setIsPreviewDirty: Dispatch<SetStateAction<boolean>>;
+  readonly updatePreviewRef: MutableRefObject<(() => void) | null>;
 } {
   const context = useContext(PreviewContext);
 
@@ -213,7 +228,9 @@ export function EditorEntryForm({
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [publication, setPublication] = useState<EditorPublication | null>(null);
   const [publicationStatus, setPublicationStatus] = useState<PublicationStatus | null>(null);
-  const { preview, setPreview, previewWindowRef } = usePreview();
+  const [previewedValue, setPreviewedValue] = useState<Record<string, unknown> | null>(null);
+  const { preview, setPreview, previewWindowRef, setIsPreviewDirty, updatePreviewRef } =
+    usePreview();
   const [previewAction, setPreviewAction] = useState<'idle' | 'exiting'>('idle');
   const router = useRouter();
   const dirty = useMemo(
@@ -226,6 +243,27 @@ export function EditorEntryForm({
 
   dirtyRef.current = dirty;
   statusRef.current = status;
+
+  const isCurrentPreviewDirty = useMemo(
+    () => !previewedValue || JSON.stringify(value) !== JSON.stringify(previewedValue),
+    [value, previewedValue],
+  );
+
+  const previewEntryRef = useRef(previewEntry);
+  previewEntryRef.current = previewEntry;
+
+  useEffect(() => {
+    setIsPreviewDirty(isCurrentPreviewDirty);
+  }, [isCurrentPreviewDirty, setIsPreviewDirty]);
+
+  useEffect(() => {
+    updatePreviewRef.current = () => {
+      previewEntryRef.current?.();
+    };
+    return () => {
+      updatePreviewRef.current = null;
+    };
+  }, []);
 
   useEffect(() => {
     setValue(cloneValue(initialValue));
@@ -406,6 +444,9 @@ export function EditorEntryForm({
       }
 
       setPreview({ url: result.data.url, expiresAt: result.data.expiresAt });
+      setPreviewedValue(cloneValue(value));
+      previewWindowRef.current?.location.reload();
+      previewWindowRef.current?.focus();
     } catch {
       setFormError('Preview could not be created. Please try again.');
     }
@@ -751,7 +792,7 @@ function displayConflictValue(value: unknown): string {
 }
 
 export function EditorPreviewControls({ apiBasePath }: { readonly apiBasePath: string }) {
-  const { preview, setPreview, previewWindowRef } = usePreview();
+  const { preview, setPreview, previewWindowRef, isPreviewDirty, updatePreviewRef } = usePreview();
 
   useEffect(() => {
     let active = true;
@@ -819,6 +860,13 @@ export function EditorPreviewControls({ apiBasePath }: { readonly apiBasePath: s
         <time dateTime={preview.expiresAt}>{preview.expiresAt}</time>
       </span>
       <span className="pith-editor-preview-bar-buttons">
+        <button
+          disabled={!isPreviewDirty}
+          onClick={() => updatePreviewRef.current?.()}
+          type="button"
+        >
+          Update
+        </button>
         {preview.url ? (
           <a
             href={preview.url}
@@ -1295,12 +1343,10 @@ export function EditorLogoutButton({ apiBasePath, returnPath }: EditorLoginFormP
 }
 
 export function EditorThemeToggle() {
-  const [theme, setTheme] = useState<'light' | 'dark' | null>(null);
-
-  useEffect(() => {
-    const current = document.documentElement.dataset.theme;
-    setTheme(current === 'dark' ? 'dark' : 'light');
-  }, []);
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window === 'undefined') return 'light';
+    return document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+  });
 
   function toggle() {
     const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
@@ -1320,7 +1366,7 @@ export function EditorThemeToggle() {
       onClick={toggle}
       type="button"
     >
-      {theme ?? '\u2026'}
+      {theme}
     </button>
   );
 }

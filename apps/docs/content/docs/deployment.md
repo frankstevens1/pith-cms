@@ -34,6 +34,12 @@ When deploying with Turborepo (e.g. on Vercel with a monorepo), environment vari
 
 Without this, Turbo warns that the variables are set on the platform but missing from `turbo.json`, and your application build will not see them.
 
+### Preview store
+
+The in-memory preview store does not survive cold starts or multi-instance
+deployments. Use a Redis-backed store and set `REDIS_URL` to your Redis connection
+string. See [Editor and preview](./editor.md#preview-store).
+
 ### Generating secrets
 
 Generate secrets with the CLI (never paste hand-typed values):
