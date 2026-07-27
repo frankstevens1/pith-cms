@@ -1,5 +1,12 @@
 # pith-docs
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies [fb24a1e]
+  - @pith-cms/next@0.2.0
+
 ## 0.0.2
 
 ### Patch Changes

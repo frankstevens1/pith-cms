@@ -1,5 +1,11 @@
 # @pith-cms/next
 
+## 0.2.0
+
+### Minor Changes
+
+- fb24a1e: Generated ThemeToggle reads theme synchronously, eliminating navigation flicker.
+
 ## 0.1.2
 
 ### Patch Changes
