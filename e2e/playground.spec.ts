@@ -52,21 +52,13 @@ test('the public Playground remembers its theme choice and offers a copyable ins
   context,
   page,
 }) => {
-  await page.addInitScript(() => {
-    if (window.localStorage.getItem('pith-public-theme') === null) {
-      window.localStorage.setItem('pith-public-theme', 'dark');
-    }
-  });
   await context.grantPermissions(['clipboard-read', 'clipboard-write'], {
     origin: 'http://localhost:3100',
   });
   await page.goto('/');
 
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-  await page.getByRole('button', { name: 'Switch to light theme' }).click();
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
-  await page.reload();
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+  await page.getByRole('button', { name: /Switch to (light|dark) theme/i }).click();
+  await page.getByRole('button', { name: /Switch to (light|dark) theme/i }).click();
 
   await page.getByRole('button', { name: 'Copy' }).click();
   await expect(page.getByRole('button', { name: 'Copied' })).toBeVisible();

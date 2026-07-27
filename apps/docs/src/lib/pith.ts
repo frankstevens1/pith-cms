@@ -1,10 +1,11 @@
 import 'server-only';
 
-import { createPith, createPasswordAuth } from '@pith-cms/next/server';
+import { createPith, createMemoryPreviewStore, createPasswordAuth } from '@pith-cms/next/server';
 import { createFilesystemRepository } from '@pith-cms/storage-filesystem';
 import { createGitHubRepository } from '@pith-cms/storage-github';
 
 import config from '../../pith.config';
+import { createRedisPreviewStore } from './redis-preview-store';
 
 const auth =
   process.env.PITH_PASSWORD_HASH && process.env.PITH_SESSION_SECRET
@@ -57,6 +58,17 @@ export const pith = createPith({
           apiBasePath: '/api/pith',
           siteName: 'Pith Docs',
         },
+        ...(process.env.PITH_PREVIEW_SECRET
+          ? {
+              preview: {
+                secret: process.env.PITH_PREVIEW_SECRET,
+                store: process.env.REDIS_URL
+                  ? createRedisPreviewStore(process.env.REDIS_URL)
+                  : createMemoryPreviewStore(),
+                resolvePath: ({ identifier }) => `/${identifier}`,
+              },
+            }
+          : {}),
       }
     : {}),
 });

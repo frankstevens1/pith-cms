@@ -19,6 +19,7 @@
     "@pith-cms/next": "workspace:*",
     "@pith-cms/storage-filesystem": "workspace:*",
     "@pith-cms/storage-github": "workspace:*",
+    "ioredis": "^5.11.1",
     "next": "^16.2.11",
     "react": "^19",
     "react-dom": "^19",

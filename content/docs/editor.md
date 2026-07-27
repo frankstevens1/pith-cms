@@ -74,6 +74,81 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 `suppressHydrationWarning` avoids a React mismatch warning because the script sets `data-theme`
 before hydration.
 
+## Preview store
+
+The default in-memory preview store does not survive cold starts or multi-instance
+deployments. For production, use a shared Redis-backed store.
+
+**Upstash Redis** (free tier is sufficient) is the recommended choice for Vercel
+deployments. Use `rediss://` for TLS connections in production.
+
+```ts
+// src/lib/redis-preview-store.ts
+import Redis from 'ioredis';
+import type { PithPreviewRecord, PithPreviewStore } from '@pith-cms/next/server';
+
+export function createRedisPreviewStore(redisUrl: string): PithPreviewStore {
+  const redis = new Redis(redisUrl, {
+    lazyConnect: true,
+    enableOfflineQueue: false,
+    maxRetriesPerRequest: 1,
+    retryStrategy: () => null,
+  });
+
+  redis.on('error', () => {
+    /* Gracefully degrade when Redis is unreachable. */
+  });
+
+  return {
+    async create(record) {
+      const ttl = Math.max(Math.ceil((Date.parse(record.expiresAt) - Date.now()) / 1000), 1);
+      await redis.set(`pith:preview:${record.id}`, JSON.stringify(record), 'EX', ttl);
+    },
+
+    async read(id) {
+      try {
+        const raw = await redis.get(`pith:preview:${id}`);
+        return raw ? (JSON.parse(raw) as PithPreviewRecord) : null;
+      } catch {
+        return null;
+      }
+    },
+
+    async delete(id) {
+      try {
+        await redis.del(`pith:preview:${id}`);
+      } catch {
+        /* Best-effort — records expire naturally via TTL. */
+      }
+    },
+  };
+}
+```
+
+```ts
+// src/lib/pith.ts
+import { createMemoryPreviewStore } from '@pith-cms/next/server';
+import { createRedisPreviewStore } from './redis-preview-store';
+
+export const pith = createPith({
+  // ...
+  ...(auth
+    ? {
+        preview: {
+          secret: process.env.PITH_PREVIEW_SECRET!,
+          store: process.env.REDIS_URL
+            ? createRedisPreviewStore(process.env.REDIS_URL)
+            : createMemoryPreviewStore(),
+          resolvePath: ({ identifier }) => `/${identifier}`,
+        },
+      }
+    : {}),
+});
+```
+
+Use `redis://localhost:6379` for local development. Records auto-expire based on the
+preview session duration.
+
 ## Next
 
 - [CLI](./cli.md) — all commands and options.

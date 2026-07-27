@@ -3,6 +3,7 @@ import { createFilesystemRepository } from '@pith-cms/storage-filesystem';
 import { createGitHubRepository } from '@pith-cms/storage-github';
 
 import config from '../../pith.config';
+import { createRedisPreviewStore } from './redis-preview-store';
 
 const repository =
   process.env.PITH_REPOSITORY_PROVIDER === 'github'
@@ -55,7 +56,9 @@ export const pith = createPith({
           ? {
               preview: {
                 secret: process.env.PITH_PREVIEW_SECRET,
-                store: createMemoryPreviewStore(),
+                store: process.env.REDIS_URL
+                  ? createRedisPreviewStore(process.env.REDIS_URL)
+                  : createMemoryPreviewStore(),
                 resolvePath: ({ collection, identifier }) => {
                   if (collection === 'pages') {
                     return identifier === 'home' ? '/' : `/${identifier}`;
