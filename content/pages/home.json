@@ -1,0 +1,9 @@
+{
+  "title": "Typed content, plain files.",
+  "slug": "home",
+  "published": true,
+  "seo": {
+    "description": "Pith gives Next.js a typed content layer and an editor — content stays in your repository.",
+    "keywords": ["pith", "nextjs", "cms", "content"]
+  }
+}
