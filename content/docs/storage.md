@@ -52,6 +52,14 @@ const repository = createGitHubRepository({
 });
 ```
 
+The adapter maps Pith's logical paths directly to your repository root. A collection
+with `contentRoot: 'content'` and `path: 'pages'` resolves to `content/pages/`
+at the repository root — not relative to any app directory.
+
+In a monorepo where content lives inside `apps/my-site/content/`, either place
+content at the repo root or set `contentRoot: 'apps/my-site/content'` in your
+config.
+
 | Auth method    | Use when                          |
 | -------------- | --------------------------------- |
 | Personal token | Development, fine-grained scopes  |
