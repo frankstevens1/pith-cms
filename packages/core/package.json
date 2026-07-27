@@ -1,6 +1,6 @@
 {
   "name": "@pith-cms/core",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Framework-independent content model, validation, serialization, and repository contracts for Pith.",
   "license": "MIT",
   "keywords": [
