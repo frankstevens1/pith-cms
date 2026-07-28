@@ -29,10 +29,16 @@ describe('@pith-cms/next server boundary', () => {
     expect(manifest.exports).toHaveProperty('./editor.css');
   });
 
-  it('keeps the editor form implementation in an explicit client boundary', async () => {
-    const source = await readFile(resolve(packageRoot, 'src/editor-client.tsx'), 'utf8');
+  it('keeps editor implementations in explicit client boundaries', async () => {
+    const sources = await Promise.all(
+      ['editor-client.tsx', 'markdown-editor.tsx'].map((fileName) =>
+        readFile(resolve(packageRoot, 'src', fileName), 'utf8'),
+      ),
+    );
 
-    expect(source.startsWith("'use client';")).toBe(true);
-    expect(source).not.toMatch(/node:fs|node:path|@pith-cms\/storage-/);
+    for (const source of sources) {
+      expect(source.startsWith("'use client';")).toBe(true);
+      expect(source).not.toMatch(/node:fs|node:path|@pith-cms\/storage-/);
+    }
   });
 });

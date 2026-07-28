@@ -7,6 +7,9 @@ import type {
   AnyFieldDefinition,
   FieldRecord,
   ListFieldOptions,
+  MarkdownDialect,
+  MarkdownEditorFeature,
+  MarkdownFieldOptions,
   MultiselectFieldOptions,
   NumberFieldOptions,
   ObjectFieldOptions,
@@ -18,6 +21,35 @@ import type {
 import { isValidSlug } from './slug.js';
 
 const collectionSchemaCache = new WeakMap<object, z.ZodType>();
+
+const MARKDOWN_DIALECTS = new Set<MarkdownDialect>(['commonmark', 'gfm']);
+const MARKDOWN_EDITOR_FEATURES = new Set<MarkdownEditorFeature>([
+  'heading-1',
+  'heading-2',
+  'heading-3',
+  'heading-4',
+  'heading-5',
+  'heading-6',
+  'strong',
+  'emphasis',
+  'strikethrough',
+  'link',
+  'image',
+  'blockquote',
+  'unordered-list',
+  'ordered-list',
+  'task-list',
+  'inline-code',
+  'code-block',
+  'horizontal-rule',
+  'table',
+  'html',
+]);
+const GFM_MARKDOWN_FEATURES = new Set<MarkdownEditorFeature>([
+  'strikethrough',
+  'task-list',
+  'table',
+]);
 
 interface CompileOptions {
   readonly allowOptional: boolean;
@@ -333,6 +365,10 @@ function validateFieldDefinition(
     validateStringOptions(field.options as unknown as StringFieldOptions, location);
   }
 
+  if (field.kind === 'markdown') {
+    validateMarkdownEditorOptions(field.options as MarkdownFieldOptions, location);
+  }
+
   if (
     field.kind === 'slug' &&
     (field.options as SlugFieldOptions).source !== undefined &&
@@ -412,6 +448,57 @@ function validateBaseOptions(options: object, location: string): void {
 
 function validateStringOptions(options: StringFieldOptions, location: string): void {
   validateLengthBounds(options, location);
+}
+
+function validateMarkdownEditorOptions(options: MarkdownFieldOptions, location: string): void {
+  if (options.editor === undefined) {
+    return;
+  }
+
+  if (!isRecord(options.editor)) {
+    throw new ConfigurationError(`${location} editor must be an object.`);
+  }
+
+  const dialect = options.editor.dialect ?? 'commonmark';
+
+  if (typeof dialect !== 'string' || !MARKDOWN_DIALECTS.has(dialect as MarkdownDialect)) {
+    throw new ConfigurationError(`${location} editor dialect must be "commonmark" or "gfm".`);
+  }
+
+  if (!Array.isArray(options.editor.features)) {
+    throw new ConfigurationError(`${location} editor features must be an array.`);
+  }
+
+  const seen = new Set<MarkdownEditorFeature>();
+
+  for (const feature of options.editor.features) {
+    if (
+      typeof feature !== 'string' ||
+      !MARKDOWN_EDITOR_FEATURES.has(feature as MarkdownEditorFeature)
+    ) {
+      throw new ConfigurationError(`${location} editor has unsupported Markdown feature.`);
+    }
+
+    const markdownFeature = feature as MarkdownEditorFeature;
+
+    if (seen.has(markdownFeature)) {
+      throw new ConfigurationError(`${location} editor features must be unique.`);
+    }
+
+    if (dialect !== 'gfm' && GFM_MARKDOWN_FEATURES.has(markdownFeature)) {
+      throw new ConfigurationError(
+        `${location} editor feature "${markdownFeature}" requires the "gfm" dialect.`,
+      );
+    }
+
+    seen.add(markdownFeature);
+  }
+
+  if (seen.has('task-list') && !seen.has('unordered-list') && !seen.has('ordered-list')) {
+    throw new ConfigurationError(
+      `${location} editor feature "task-list" requires "unordered-list" or "ordered-list".`,
+    );
+  }
 }
 
 function validateNumberOptions(options: NumberFieldOptions, location: string): void {

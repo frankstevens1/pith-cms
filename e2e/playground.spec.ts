@@ -39,9 +39,7 @@ test('the playground renders content through public Pith packages', async ({ pag
   await page.goto('/posts/lightweight-cms');
   await expect(page.getByRole('heading', { name: 'A Lightweight CMS' })).toBeVisible();
   await expect(
-    page.getByText(
-      'Content files that live in your repo, with just enough structure to be useful.',
-    ),
+    page.getByText('built around content files that live directly in your Git repository'),
   ).toBeVisible();
 
   await page.goto('/posts/missing');
@@ -89,7 +87,13 @@ test('the protected editor creates, updates, deletes, and logs out', async ({ pa
 
     await page.getByLabel('Title').fill('E2E editor post');
     await page.getByLabel('Slug').fill(identifier);
-    await page.getByLabel('Body').fill('Created through the protected editor.');
+    const bodyEditor = page.getByRole('textbox', { name: 'Body' });
+    await expect(bodyEditor).toHaveAttribute('aria-multiline', 'true');
+    await expect(page.getByText('Frontend profile not declared')).toBeVisible();
+    await page.getByRole('button', { name: 'Create' }).click();
+    await expect(page.getByText('Body is required.')).toBeVisible();
+    await bodyEditor.fill('Created through the protected editor.');
+    await expect(page.getByText('Body is required.')).not.toBeVisible();
     const createResponse = page.waitForResponse(
       (response) =>
         response.url().endsWith('/api/pith/entries') && response.request().method() === 'POST',
@@ -99,7 +103,7 @@ test('the protected editor creates, updates, deletes, and logs out', async ({ pa
     created = true;
 
     await expect(page.locator('.pith-editor-breadcrumb-current')).toHaveText('E2E editor post');
-    await page.getByLabel('Body').fill('Updated through the protected editor.');
+    await bodyEditor.fill('Updated through the protected editor.');
     const updateResponse = page.waitForResponse(
       (response) =>
         response.url().endsWith('/api/pith/entries') && response.request().method() === 'PUT',
@@ -145,9 +149,7 @@ test('the editor previews unsaved changes and closes the preview on save', async
         'Published pages are visible to visitors. Unpublished pages remain editable and can be previewed without saving.',
       ),
     ).toBeVisible();
-    await expect(
-      page.getByText('Preview your unsaved changes. A preview banner will appear above.'),
-    ).toBeVisible();
+    await expect(page.getByText('Preview your unsaved changes.')).toBeVisible();
     await page.getByLabel('Description').fill(previewDescription);
     const previewResponse = page.waitForResponse(
       (response) =>
@@ -160,8 +162,8 @@ test('the editor previews unsaved changes and closes the preview on save', async
     await expect(
       page.locator('.pith-editor-preview-bar').getByText('Preview mode is active.'),
     ).toBeVisible();
+    await expect(page.locator('.pith-editor-preview-bar').getByRole('button')).toBeVisible();
     await expect(page.getByRole('link', { exact: true, name: 'View' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Exit preview' })).toBeVisible();
 
     const previewPagePromise = page.context().waitForEvent('page');
     await page.getByRole('link', { exact: true, name: 'View' }).click();
@@ -245,7 +247,7 @@ test('unpublished pages are hidden publicly but remain previewable to an editor'
       response.url().endsWith('/api/pith/preview/disable') &&
       response.request().method() === 'POST',
   );
-  await page.getByRole('button', { name: 'Exit preview' }).click();
+  await page.locator('.pith-editor-preview-bar').getByRole('button').click();
   expect((await disableResponse).status()).toBe(200);
   await expect(page).toHaveURL(/\/pith\/collections\/pages\/about$/);
   await expect(page.locator('.pith-editor-preview-bar')).not.toBeVisible();

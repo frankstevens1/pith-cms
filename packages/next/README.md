@@ -59,6 +59,8 @@ pnpm pith auth generate-secret
 
 The editor validates permissions, CSRF, origin, content type, body size,
 and repository revisions on the server. It does not force overwrite conflicts.
+Markdown fields use a lazy-loaded source editor; optional field-level dialect and feature metadata
+controls its formatting toolbar and warnings without making this package a Markdown renderer.
 
 ## Preview
 

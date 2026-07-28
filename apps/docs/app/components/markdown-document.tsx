@@ -50,12 +50,31 @@ function normalizeDocumentationLink(href: string | undefined): string | undefine
   return `/${href.slice(2, -3)}`;
 }
 
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+function headingId(children: ReactNode): string {
+  return slugify(textFromNode(children));
+}
+
 export function MarkdownDocument({ source }: MarkdownDocumentProps) {
   return (
     <div className="docs-content">
       <ReactMarkdown
         components={{
           a: ({ children, href }) => <a href={normalizeDocumentationLink(href)}>{children}</a>,
+          h1: ({ children }) => <h1 id={headingId(children)}>{children}</h1>,
+          h2: ({ children }) => <h2 id={headingId(children)}>{children}</h2>,
+          h3: ({ children }) => <h3 id={headingId(children)}>{children}</h3>,
+          h4: ({ children }) => <h4 id={headingId(children)}>{children}</h4>,
+          h5: ({ children }) => <h5 id={headingId(children)}>{children}</h5>,
+          h6: ({ children }) => <h6 id={headingId(children)}>{children}</h6>,
           pre: ({ children }) => (
             <CopyableCodeBlock code={textFromNode(children)} language={languageFromNode(children)}>
               {children}

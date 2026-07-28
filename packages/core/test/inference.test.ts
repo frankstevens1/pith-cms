@@ -32,6 +32,14 @@ const collection = defineCollection({
   },
 });
 
+const markdownField = field.markdown({
+  required: true,
+  editor: {
+    dialect: 'gfm',
+    features: ['heading-2', 'strong', 'table'] as const,
+  },
+});
+
 type Article = InferCollectionEntry<typeof collection>;
 
 test('collection entries are inferred from fields', () => {
@@ -45,4 +53,12 @@ test('collection entries are inferred from fields', () => {
     settings: { enabled: boolean };
     tags?: readonly string[];
   }>();
+});
+
+test('markdown editor options preserve their literal types', () => {
+  expectTypeOf(markdownField.options.required).toEqualTypeOf<true>();
+  expectTypeOf(markdownField.options.editor.dialect).toEqualTypeOf<'gfm'>();
+  expectTypeOf(markdownField.options.editor.features).toEqualTypeOf<
+    readonly ['heading-2', 'strong', 'table']
+  >();
 });

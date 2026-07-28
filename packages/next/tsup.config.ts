@@ -2,14 +2,20 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'tsup';
 
-const editorClientPath = fileURLToPath(new URL('./dist/editor-client.js', import.meta.url));
+const clientModulePaths = ['editor-client', 'markdown-editor'].map((name) =>
+  fileURLToPath(new URL(`./dist/${name}.js`, import.meta.url)),
+);
 
-async function markEditorClientAsClient(): Promise<void> {
-  const source = await readFile(editorClientPath, 'utf8');
+async function markClientModulesAsClient(): Promise<void> {
+  await Promise.all(
+    clientModulePaths.map(async (clientModulePath) => {
+      const source = await readFile(clientModulePath, 'utf8');
 
-  if (!source.startsWith("'use client';")) {
-    await writeFile(editorClientPath, `'use client';\n${source}`, 'utf8');
-  }
+      if (!source.startsWith("'use client';")) {
+        await writeFile(clientModulePath, `'use client';\n${source}`, 'utf8');
+      }
+    }),
+  );
 }
 
 export default defineConfig((options) => ({
@@ -22,6 +28,7 @@ export default defineConfig((options) => ({
     'src/server.ts',
     'src/types.ts',
     'src/editor-client.tsx',
+    'src/markdown-editor.tsx',
     'src/preview-banner.tsx',
   ],
   external: [
@@ -31,9 +38,10 @@ export default defineConfig((options) => ({
     'react/jsx-runtime',
     'server-only',
     './editor-client.js',
+    './markdown-editor.js',
   ],
   format: ['esm'],
-  onSuccess: markEditorClientAsClient,
+  onSuccess: markClientModulesAsClient,
   sourcemap: true,
   splitting: false,
   target: 'es2022',

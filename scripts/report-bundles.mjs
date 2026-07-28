@@ -7,6 +7,7 @@ const entries = [
   ['@pith-cms/storage-github', 'packages/storage-github/dist/index.js', 80 * 1024],
   ['@pith-cms/next server', 'packages/next/dist/server.js', 160 * 1024],
   ['@pith-cms/next editor client', 'packages/next/dist/editor-client.js', 75 * 1024],
+  ['@pith-cms/next Markdown editor', 'packages/next/dist/markdown-editor.js', 24 * 1024],
   ['@pith-cms/next editor stylesheet', 'packages/next/dist/editor.css', 32 * 1024],
   ['@pith-cms/next password', 'packages/next/dist/password.js', 8 * 1024],
   ['@pith-cms/cli', 'packages/cli/dist/cli.js', 120 * 1024],

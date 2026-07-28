@@ -34,6 +34,7 @@ export default defineConfig({
           'playwright-only-preview-secret-that-is-longer-than-thirty-two-characters',
         PITH_REPOSITORY_PROVIDER: 'filesystem',
         PITH_SESSION_SECURE: 'false',
+        REDIS_URL: '',
       },
       url: 'http://localhost:3100',
       reuseExistingServer: false,
@@ -41,6 +42,16 @@ export default defineConfig({
     },
     {
       command: 'pnpm --filter pith-docs build && pnpm --filter pith-docs start',
+      env: {
+        ...process.env,
+        PITH_PLAYWRIGHT_PASSWORD_HASH:
+          '$argon2id$v=19$m=65536,t=3,p=4$Burn7y4uypR4bfiJKJtjQw$sAMpSgoymDTkB+kH7sq8eOOnwhapl2/5NZwkzTgGW2I',
+        PITH_REPOSITORY_PROVIDER: 'filesystem',
+        PITH_SESSION_SECRET:
+          'playwright-only-docs-session-secret-longer-than-thirty-two-characters',
+        PITH_SESSION_SECURE: 'false',
+        REDIS_URL: '',
+      },
       url: 'http://localhost:3101',
       reuseExistingServer: false,
       timeout: 120_000,

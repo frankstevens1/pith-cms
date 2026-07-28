@@ -203,10 +203,24 @@
 }
 
 .pith-editor-sidebar-version {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 12px 16px;
   color: color-mix(in srgb, var(--ink-muted, #5f5e59) 60%, transparent);
   font-size: 10px;
   border-top: 1px solid var(--rule, #bcbab2);
+}
+
+.pith-editor-sidebar-docs {
+  color: var(--accent, #ca4812);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.pith-editor-sidebar-docs:hover {
+  text-decoration: underline;
 }
 
 .pith-editor-main {
@@ -524,6 +538,142 @@
   resize: vertical;
 }
 
+.pith-markdown-editor {
+  overflow: hidden;
+  border: 1px solid var(--rule, #bcbab2);
+  background: var(--code, #1a1a18);
+  color: var(--code-ink, #f2f0e8);
+}
+
+.pith-markdown-editor:focus-within {
+  border-color: var(--accent, #ca4812);
+}
+
+.pith-markdown-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--code-ink, #f2f0e8) 18%, transparent);
+  background: color-mix(in srgb, var(--code, #1a1a18) 88%, var(--code-ink, #f2f0e8));
+}
+
+.pith-editor .pith-markdown-toolbar button {
+  min-width: 34px;
+  min-height: 32px;
+  margin: 0;
+  padding: 0 9px;
+  border: 0;
+  border-right: 1px solid color-mix(in srgb, var(--code-ink, #f2f0e8) 18%, transparent);
+  color: color-mix(in srgb, var(--code-ink, #f2f0e8) 76%, transparent);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+}
+
+.pith-editor .pith-markdown-toolbar button:hover {
+  background: color-mix(in srgb, var(--accent, #ca4812) 16%, transparent);
+  color: var(--code-ink, #f2f0e8);
+}
+
+.pith-editor .pith-markdown-toolbar button[data-feature='strong'] {
+  font-weight: 900;
+}
+
+.pith-editor .pith-markdown-toolbar button[data-feature='emphasis'] {
+  font-style: italic;
+}
+
+.pith-editor .pith-markdown-toolbar button[data-feature='strikethrough'] {
+  text-decoration: line-through;
+}
+
+.pith-markdown-editor-source .cm-editor {
+  min-height: 360px;
+  background: transparent;
+  color: inherit;
+  font-size: 13px;
+}
+
+.pith-markdown-editor-source .cm-editor.cm-focused {
+  outline: none;
+}
+
+.pith-markdown-editor-source .cm-scroller {
+  overflow: auto;
+  font-family: inherit;
+  line-height: 1.65;
+}
+
+.pith-markdown-editor-source .cm-content {
+  min-height: 360px;
+  padding: 12px 14px;
+  caret-color: var(--code-ink, #f2f0e8);
+}
+
+.pith-markdown-editor-source .cm-line {
+  padding: 0;
+}
+
+.pith-markdown-editor-source .cm-activeLine {
+  background: color-mix(in srgb, var(--code-ink, #f2f0e8) 5%, transparent);
+}
+
+.pith-markdown-editor-source .cm-cursor,
+.pith-markdown-editor-source .cm-dropCursor {
+  border-left-color: var(--accent, #ca4812);
+}
+
+.pith-markdown-editor-source .cm-selectionBackground,
+.pith-markdown-editor-source .cm-content ::selection {
+  background: color-mix(in srgb, var(--accent, #ca4812) 42%, transparent) !important;
+}
+
+.pith-markdown-editor-source .cm-tooltip {
+  border: 1px solid var(--rule, #bcbab2);
+  background: var(--surface, #fbfaf7);
+  color: var(--ink, #171716);
+  font-family: inherit;
+  font-size: 11px;
+}
+
+.pith-markdown-editor-source .cm-panels {
+  border-top: 1px solid var(--rule, #bcbab2);
+  background: var(--surface, #fbfaf7);
+  color: var(--ink, #171716);
+  font-family: inherit;
+  font-size: 11px;
+}
+
+.pith-markdown-editor-source .cm-panel-lint ul {
+  margin: 0;
+  padding: 0;
+}
+
+.pith-markdown-editor-source .cm-panel-lint [name='close'] {
+  color: inherit;
+}
+
+.pith-markdown-editor-source .cm-diagnostic {
+  padding: 5px 8px;
+}
+
+.pith-markdown-editor-source .cm-diagnostic-warning {
+  border-left-color: var(--accent, #ca4812);
+}
+
+.pith-markdown-editor-status {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 16px;
+  padding: 6px 10px;
+  border-top: 1px solid color-mix(in srgb, var(--code-ink, #f2f0e8) 18%, transparent);
+  color: color-mix(in srgb, var(--code-ink, #f2f0e8) 58%, transparent);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
 .pith-editor-field select {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235f5e59'/%3E%3C/svg%3E");
@@ -755,7 +905,7 @@
   color: var(--ink, #171716);
   font: inherit;
   font-family: inherit;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   line-height: 1;
   letter-spacing: 0.08em;
@@ -779,6 +929,17 @@
 .pith-editor .pith-editor-preview-bar-buttons button:not(:disabled):hover {
   border-color: var(--accent, #ca4812);
   color: var(--accent, #ca4812);
+}
+
+.pith-editor-preview-update {
+  background: var(--accent, #ca4812) !important;
+  border-color: var(--accent, #ca4812) !important;
+  color: #fff !important;
+}
+
+.pith-editor-preview-update:hover:not(:disabled) {
+  background: transparent !important;
+  color: var(--accent, #ca4812) !important;
 }
 
 .pith-editor button[type='submit'],
@@ -944,6 +1105,7 @@
 }
 
 .pith-editor-delete {
+  margin-top: 16px;
   padding: 16px;
   border: 1px solid var(--rule, #bcbab2);
   border-left: 3px solid var(--accent, #ca4812);
@@ -962,6 +1124,26 @@
 }
 
 .pith-editor-delete .pith-editor-actions {
+  margin-top: 12px;
+  padding-top: 0;
+  border-top: none;
+}
+
+.pith-editor-saved {
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid var(--rule, #bcbab2);
+  border-left: 3px solid var(--accent, #ca4812);
+  background: var(--surface, #fbfaf7);
+}
+
+.pith-editor-saved p {
+  margin: 4px 0;
+  font-size: 13px;
+  color: var(--ink-muted, #5f5e59);
+}
+
+.pith-editor-saved .pith-editor-actions {
   margin-top: 12px;
   padding-top: 0;
   border-top: none;
@@ -1071,133 +1253,72 @@
 
 .pith-editor-theme-banner {
   display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  padding: 14px 20px;
-  background: var(--surface-muted, #ebe9e2);
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 16px;
   border-bottom: 1px solid var(--rule, #bcbab2);
+  border-left: 3px solid var(--accent, #ca4812);
+  background: var(--surface, #fbfaf7);
   font-size: 12px;
-  line-height: 1.5;
-}
-
-.pith-editor-theme-banner-body {
-  flex: 1;
-  min-width: 0;
-}
-
-.pith-editor-theme-banner-body p {
-  margin: 0 0 8px;
-  color: var(--ink, #171716);
-}
-
-.pith-editor-theme-banner-body code {
-  background: var(--surface, #fbfaf7);
-  padding: 1px 4px;
-  border-radius: 2px;
-  font-size: 11px;
-}
-
-.pith-editor-theme-banner-body pre {
-  margin: 0 0 8px;
-  padding: 10px;
-  padding-right: 52px;
-  background: var(--surface, #fbfaf7);
-  border: 1px solid var(--rule, #bcbab2);
-  border-radius: 3px;
-  overflow-x: auto;
-}
-
-.pith-editor-theme-banner-body pre code {
-  background: none;
-  padding: 0;
-  font-size: 11px;
-  line-height: 1.6;
-}
-
-.pith-editor-theme-banner-code-wrapper {
-  position: relative;
-}
-
-.pith-editor-theme-banner-copy {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  min-height: 24px;
-  padding: 0 8px;
-  border: 1px solid var(--rule, #bcbab2);
-  border-radius: 3px;
-  background: var(--canvas, #f4f2ed);
-  color: var(--ink-muted, #5f5e59);
-  font: inherit;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.pith-editor-theme-banner-copy:hover {
-  border-color: var(--ink, #171716);
-  color: var(--ink, #171716);
-}
-
-.t-kw {
-  color: #8250df;
-  font-weight: 600;
-}
-
-.t-str {
-  color: #0a3069;
-}
-
-.t-id {
-  color: #1f2328;
-}
-
-.t-jsx {
-  color: #0550ae;
-}
-
-[data-theme='dark'] .t-kw {
-  color: #d2a8ff;
-}
-
-[data-theme='dark'] .t-str {
-  color: #a5d6ff;
-}
-
-[data-theme='dark'] .t-id {
-  color: #e6edf3;
-}
-
-[data-theme='dark'] .t-jsx {
-  color: #79c0ff;
-}
-
-.pith-editor-theme-banner-body a {
-  color: var(--accent, #ca4812);
-  font-weight: 600;
-}
-
-.pith-editor-theme-banner-dismiss {
   flex-shrink: 0;
+}
+
+.pith-editor-theme-banner-message {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pith-editor-theme-banner-message strong {
+  font-weight: 600;
+}
+
+.pith-editor-theme-banner-buttons {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.pith-editor .pith-editor-theme-banner-buttons button,
+.pith-editor .pith-editor-theme-banner-buttons a {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
   min-height: 28px;
   padding: 0 10px;
   border: 1px solid var(--rule, #bcbab2);
-  background: var(--surface, #fbfaf7);
-  color: var(--ink-muted, #5f5e59);
+  background: transparent;
+  color: var(--ink, #171716);
   font: inherit;
-  font-size: 11px;
-  font-weight: 600;
-  cursor: pointer;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
   white-space: nowrap;
-  border-radius: 3px;
+  cursor: pointer;
+  margin: 0;
+  box-sizing: border-box;
+  vertical-align: middle;
 }
 
-.pith-editor-theme-banner-dismiss:hover {
-  border-color: var(--ink, #171716);
-  color: var(--ink, #171716);
+.pith-editor .pith-editor-theme-banner-buttons button::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+.pith-editor .pith-editor-theme-banner-buttons a:hover,
+.pith-editor .pith-editor-theme-banner-buttons button:hover {
+  border-color: var(--accent, #ca4812);
+  color: var(--accent, #ca4812);
 }
 
 .pith-editor-header-end button {
@@ -1232,7 +1353,7 @@
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 860px) {
   .pith-editor-sidebar {
     display: none;
     position: fixed;
@@ -1272,28 +1393,35 @@
     padding: 16px 0;
   }
 
-  .pith-editor-sidebar-toggle {
+  .pith-editor .pith-editor-sidebar-toggle {
     display: flex !important;
     align-items: center;
     justify-content: center;
     position: fixed;
-    top: 10px;
+    top: 11px;
     left: 10px;
     z-index: 110;
     width: 28px;
     height: 28px;
+    min-height: 28px;
     padding: 0;
+    margin: 0;
     border: 1px solid var(--rule, #bcbab2);
     background: var(--surface, #fbfaf7);
     color: var(--ink, #171716);
+    font: inherit;
     font-size: 14px;
+    font-weight: 400;
     line-height: 1;
+    letter-spacing: 0;
+    text-transform: none;
     cursor: pointer;
+    border-radius: 0;
+    border: none;
   }
 
-  .pith-editor-sidebar-toggle:hover {
-    border-color: var(--ink, #171716);
-    color: var(--ink, #171716);
+  .pith-editor .pith-editor-sidebar-toggle:hover {
+    color: var(--accent, #ca4812);
   }
 
   .pith-editor-header-start {
@@ -1305,7 +1433,7 @@
   }
 
   .pith-editor-main {
-    padding: 20px 16px 40px;
+    padding: 20px 16px 64px;
   }
 
   .pith-editor-collection-grid {
@@ -1315,9 +1443,137 @@
   .pith-editor-form-body {
     flex-direction: column;
     gap: 24px;
+    align-items: stretch;
+  }
+
+  .pith-editor-form-sidebar-info {
+    display: none;
+  }
+
+  .pith-editor-form-sidebar {
+    position: static;
+    max-height: none;
+  }
+
+  .pith-editor-form-sidebar-description {
+    display: none;
+  }
+
+  .pith-editor-form-sidebar-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 8px 16px;
+    border-top: 1px solid var(--rule, #bcbab2);
+    background: var(--surface, #fbfaf7);
   }
 
   .pith-editor-form-sidebar-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
     position: static;
+  }
+
+  .pith-editor .pith-editor-form-sidebar-actions button {
+    flex: none;
+    height: 28px;
+    min-height: 28px;
+    padding: 0 10px;
+    margin-top: 0;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .pith-editor-delete {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 24px;
+    background: color-mix(in srgb, var(--ink, #171716) 40%, transparent);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    border: none;
+    border-left: none;
+  }
+
+  .pith-editor-delete h2,
+  .pith-editor-delete p,
+  .pith-editor-delete .pith-editor-actions {
+    max-width: 340px;
+    width: 100%;
+    background: var(--surface, #fbfaf7);
+    border: 1px solid var(--rule, #bcbab2);
+  }
+
+  .pith-editor-saved {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 24px;
+    background: color-mix(in srgb, var(--ink, #171716) 40%, transparent);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    border: none;
+    border-left: none;
+  }
+
+  .pith-editor-saved p,
+  .pith-editor-saved .pith-editor-actions {
+    max-width: 340px;
+    width: 100%;
+    background: var(--surface, #fbfaf7);
+    border: 1px solid var(--rule, #bcbab2);
+  }
+
+  .pith-editor-saved p {
+    margin: 0;
+    padding: 20px 24px 16px;
+    text-align: center;
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+  }
+
+  .pith-editor-saved .pith-editor-actions {
+    margin: 0;
+    padding: 0 24px 20px;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    justify-content: center;
+  }
+
+  .pith-editor-delete h2 {
+    margin: 0;
+    padding: 20px 24px 0;
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+  }
+
+  .pith-editor-delete p {
+    margin: 0;
+    padding: 8px 24px 20px;
+    border-top: none;
+    border-bottom: none;
+  }
+
+  .pith-editor-delete .pith-editor-actions {
+    margin: 0;
+    padding: 0 24px 20px;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
   }
 }

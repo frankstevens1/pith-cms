@@ -38,7 +38,9 @@ Without this, Turbo warns that the variables are set on the platform but missing
 
 The in-memory preview store does not survive cold starts or multi-instance
 deployments. Use a Redis-backed store and set `REDIS_URL` to your Redis connection
-string. See [Editor and preview](./editor.md#preview-store).
+string. Deployments with a CDN (e.g. Vercel) also need a `proxy.ts` that
+sets `Cache-Control: no-cache` for requests with the `pith_preview` cookie.
+See [Editor and preview](./editor.md#preview-store).
 
 ### Generating secrets
 

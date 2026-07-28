@@ -81,7 +81,7 @@ interface ResolvedEditorOptions {
   readonly siteName: string;
   readonly trustedOrigins: readonly string[];
   readonly onAuditEvent: PithEditorOptions['onAuditEvent'];
-  readonly docsUrl?: string;
+  readonly docsUrl: string;
 }
 
 interface MutationEnvelope {
@@ -534,6 +534,22 @@ function createEditorHandlers<TConfig extends PithConfig>(
   });
 }
 
+function sortByOrder<
+  T extends { readonly value: Record<string, unknown>; readonly identifier: string },
+>(entries: readonly T[], orderField?: string): T[] {
+  if (!orderField) {
+    return [...entries].sort((left, right) => left.identifier.localeCompare(right.identifier));
+  }
+  return [...entries].sort((left, right) => {
+    const leftVal = left.value[orderField];
+    const rightVal = right.value[orderField];
+    if (typeof leftVal === 'number' && typeof rightVal === 'number') {
+      return leftVal - rightVal;
+    }
+    return String(leftVal ?? '').localeCompare(String(rightVal ?? ''));
+  });
+}
+
 async function renderEditorRoute<TConfig extends PithConfig>({
   config,
   repository,
@@ -572,7 +588,9 @@ async function renderEditorRoute<TConfig extends PithConfig>({
   > = {};
   for (const [name] of Object.entries(config.collections)) {
     const result = await content.listEntries(name as Extract<keyof TConfig['collections'], string>);
-    sidebarEntries[name] = result.entries.map((entry) => ({
+    const orderField = (config.collections[name] as { order?: string }).order;
+    const sorted = sortByOrder(result.entries, orderField);
+    sidebarEntries[name] = sorted.map((entry) => ({
       name: entry.identifier,
       label: displayEntryLabel(
         entry.value,
@@ -668,9 +686,8 @@ async function renderEditorRoute<TConfig extends PithConfig>({
     const listed = await content.listEntries(
       collectionName as Extract<keyof TConfig['collections'], string>,
     );
-    const sorted = [...listed.entries].sort((left, right) =>
-      left.identifier.localeCompare(right.identifier),
-    );
+    const orderField = (config.collections[collectionName] as { order?: string }).order;
+    const sorted = sortByOrder(listed.entries, orderField);
 
     return (
       <EditorShell
@@ -917,7 +934,7 @@ function EditorShell({
       <div className="pith-editor">
         <header className="pith-editor-header">
           <div className="pith-editor-header-start">
-            <a className="pith-editor-wordmark" href={options.basePath}>
+            <a className="pith-editor-wordmark" href="/">
               {options.siteName}
             </a>
             {breadcrumb && breadcrumb.length > 0 ? (
@@ -948,15 +965,14 @@ function EditorShell({
           ) : null}
         </header>
         {user ? <EditorPreviewControls apiBasePath={options.apiBasePath} /> : null}
-        <MissingThemeScriptBanner
-          {...(options.docsUrl === undefined ? {} : { docsUrl: options.docsUrl })}
-        />
+        <MissingThemeScriptBanner docsUrl={options.docsUrl} />
         <div className="pith-editor-body">
           {sidebarLinks && user ? (
             <EditorSidebar
               {...(typeof currentCollection === 'string' ? { currentCollection } : {})}
               {...(typeof currentEntry === 'string' ? { currentEntry } : {})}
               {...(sidebarEntries ? { entries: sidebarEntries } : {})}
+              docsUrl={options.docsUrl}
               links={sidebarLinks}
               {...(version ? { version } : {})}
             />
@@ -1031,15 +1047,20 @@ function resolveEditorOptions(options: PithEditorOptions): ResolvedEditorOptions
     );
   }
 
+  const docsUrl =
+    options.docsUrl !== undefined && typeof options.docsUrl === 'string'
+      ? options.docsUrl
+      : process.env.NODE_ENV !== 'production'
+        ? 'http://localhost:3101'
+        : 'https://docs.pith.df1.cx';
+
   return Object.freeze({
     basePath,
     apiBasePath,
     siteName: options.siteName?.trim() || 'Pith',
     trustedOrigins,
     onAuditEvent: options.onAuditEvent,
-    ...(options.docsUrl !== undefined && typeof options.docsUrl === 'string'
-      ? { docsUrl: options.docsUrl }
-      : {}),
+    docsUrl,
   });
 }
 

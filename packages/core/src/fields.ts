@@ -49,6 +49,40 @@ export interface StringFieldOptions extends BaseFieldOptions<string> {
   readonly maxLength?: number;
 }
 
+export type MarkdownDialect = 'commonmark' | 'gfm';
+
+export type MarkdownEditorFeature =
+  | 'heading-1'
+  | 'heading-2'
+  | 'heading-3'
+  | 'heading-4'
+  | 'heading-5'
+  | 'heading-6'
+  | 'strong'
+  | 'emphasis'
+  | 'strikethrough'
+  | 'link'
+  | 'image'
+  | 'blockquote'
+  | 'unordered-list'
+  | 'ordered-list'
+  | 'task-list'
+  | 'inline-code'
+  | 'code-block'
+  | 'horizontal-rule'
+  | 'table'
+  | 'html';
+
+export interface MarkdownEditorOptions {
+  readonly dialect?: MarkdownDialect;
+  readonly features: readonly MarkdownEditorFeature[];
+}
+
+export interface MarkdownFieldOptions extends StringFieldOptions {
+  /** Authoring hints only; rendering and content validation remain consumer-owned. */
+  readonly editor?: MarkdownEditorOptions;
+}
+
 /**
  * Metadata for editor integrations. It identifies the field from which a
  * future editor may suggest a slug; validation and persistence never mutate
@@ -125,7 +159,7 @@ export type EmailField<TOptions extends StringFieldOptions = StringFieldOptions>
   TOptions,
   'email'
 >;
-export type MarkdownField<TOptions extends StringFieldOptions = StringFieldOptions> =
+export type MarkdownField<TOptions extends MarkdownFieldOptions = MarkdownFieldOptions> =
   FieldDefinition<string, TOptions, 'markdown'>;
 export type SelectField<TOptions extends SelectFieldOptions = SelectFieldOptions> = FieldDefinition<
   SelectOptionValue<TOptions['options']>,
@@ -300,7 +334,7 @@ export const field = {
     return createField('multiselect', options);
   },
 
-  markdown<TOptions extends StringFieldOptions = StringFieldOptions>(
+  markdown<const TOptions extends MarkdownFieldOptions = MarkdownFieldOptions>(
     options?: TOptions,
   ): MarkdownField<TOptions> {
     return createField('markdown', options ?? ({} as TOptions));

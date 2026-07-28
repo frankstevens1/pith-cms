@@ -7,10 +7,11 @@ import { createGitHubRepository } from '@pith-cms/storage-github';
 import config from '../../pith.config';
 import { createRedisPreviewStore } from './redis-preview-store';
 
+const passwordHash = process.env.PITH_PLAYWRIGHT_PASSWORD_HASH ?? process.env.PITH_PASSWORD_HASH;
 const auth =
-  process.env.PITH_PASSWORD_HASH && process.env.PITH_SESSION_SECRET
+  passwordHash && process.env.PITH_SESSION_SECRET
     ? createPasswordAuth({
-        passwordHash: process.env.PITH_PASSWORD_HASH,
+        passwordHash,
         sessionSecret: process.env.PITH_SESSION_SECRET,
         ...(process.env.PITH_SESSION_SECURE === 'false' ? { secure: false } : {}),
       })

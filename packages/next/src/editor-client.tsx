@@ -3,6 +3,8 @@
 import { useRouter } from 'next/navigation';
 import {
   createContext,
+  lazy,
+  Suspense,
   useContext,
   useEffect,
   useMemo,
@@ -13,6 +15,10 @@ import {
   type ReactNode,
   type SetStateAction,
 } from 'react';
+
+import type { MarkdownEditorOptions } from '@pith-cms/core';
+
+const MarkdownEditor = lazy(() => import('./markdown-editor.js'));
 
 interface PreviewState {
   readonly url: string | null;
@@ -134,6 +140,7 @@ export interface EditorField {
     readonly options?: readonly EditorOption[];
     readonly fields?: readonly EditorField[];
     readonly item?: EditorField;
+    readonly editor?: MarkdownEditorOptions;
   };
 }
 
@@ -226,13 +233,19 @@ export function EditorEntryForm({
   const [conflict, setConflict] = useState<EditorFailure['error'] | null>(null);
   const [conflictLatest, setConflictLatest] = useState<Record<string, unknown> | null>(null);
   const [status, setStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
+  const [showSaved, setShowSaved] = useState(false);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [publication, setPublication] = useState<EditorPublication | null>(null);
   const [publicationStatus, setPublicationStatus] = useState<PublicationStatus | null>(null);
   const [previewedValue, setPreviewedValue] = useState<Record<string, unknown> | null>(null);
-  const { preview, setPreview, previewWindowRef, setIsPreviewDirty, updatePreviewRef } =
-    usePreview();
-  const [previewAction, setPreviewAction] = useState<'idle' | 'exiting'>('idle');
+  const {
+    preview,
+    setPreview,
+    previewWindowRef,
+    isPreviewDirty,
+    setIsPreviewDirty,
+    updatePreviewRef,
+  } = usePreview();
   const router = useRouter();
   const dirty = useMemo(
     () => JSON.stringify(value) !== JSON.stringify(savedValue),
@@ -288,6 +301,15 @@ export function EditorEntryForm({
     return () => window.removeEventListener('beforeunload', onBeforeUnload);
   }, []);
 
+  useEffect(() => {
+    if (!showSaved) {
+      return;
+    }
+
+    const timer = setTimeout(() => setShowSaved(false), 3000);
+    return () => clearTimeout(timer);
+  }, [showSaved]);
+
   async function save(): Promise<void> {
     if (existing && !canUpdate) {
       return;
@@ -298,9 +320,19 @@ export function EditorEntryForm({
     }
 
     const resolvedIdentifier = existing ? identifier : value[identifierField];
+    const clientErrors = markdownFieldErrors(fields, value);
 
     if (typeof resolvedIdentifier !== 'string' || resolvedIdentifier.length === 0) {
-      setFieldErrors({ [identifierField]: 'An identifier is required.' });
+      clientErrors[identifierField] = 'An identifier is required.';
+    }
+
+    if (Object.keys(clientErrors).length > 0) {
+      setFieldErrors(clientErrors);
+      setFormError(null);
+      return;
+    }
+
+    if (typeof resolvedIdentifier !== 'string') {
       return;
     }
 
@@ -336,6 +368,7 @@ export function EditorEntryForm({
     }
 
     setStatus('saved');
+    setShowSaved(true);
     setSavedValue(cloneValue(value));
     setActiveRevision(result.data.revision);
     setPublication(result.data.publication ?? null);
@@ -452,13 +485,6 @@ export function EditorEntryForm({
     } catch {
       setFormError('Preview could not be created. Please try again.');
     }
-  }
-
-  async function exitPreview(): Promise<void> {
-    setPreviewAction('exiting');
-    await disablePreview(apiBasePath, previewWindowRef, setPreview);
-    setPreviewAction('idle');
-    router.refresh();
   }
 
   async function previewPullRequest(): Promise<void> {
@@ -589,15 +615,18 @@ export function EditorEntryForm({
         <div className="pith-editor-fields">
           {fields.map((field) => (
             <EditorFieldControl
+              errors={fieldErrors}
               field={field}
               key={field.name}
-              onChange={(nextValue) =>
-                setValue((current) => ({ ...current, [field.name]: nextValue }))
-              }
+              onChange={(nextValue, changedPath) => {
+                setValue((current) => ({ ...current, [field.name]: nextValue }));
+                setFieldErrors((current) =>
+                  updateFieldErrors(current, field, nextValue, changedPath),
+                );
+              }}
               path={[field.name]}
               value={value[field.name]}
               {...(existing && field.name === identifierField ? { disabled: true } : {})}
-              {...(fieldErrors[field.name] === undefined ? {} : { error: fieldErrors[field.name] })}
             />
           ))}
         </div>
@@ -634,7 +663,7 @@ export function EditorEntryForm({
               <p className="pith-editor-form-sidebar-description">
                 {preview.expiresAt
                   ? 'Preview mode is active. View your changes in the banner above.'
-                  : 'Preview your unsaved changes. A preview banner will appear above.'}
+                  : 'Preview your unsaved changes.'}
               </p>
             ) : null}
             <div className="pith-editor-form-sidebar-actions">
@@ -642,29 +671,35 @@ export function EditorEntryForm({
                 disabled={
                   status === 'saving' ||
                   publication?.mode === 'pull-request' ||
-                  (existing ? !canUpdate : !canCreate)
+                  (existing ? !canUpdate : !canCreate) ||
+                  !dirty
                 }
                 type="submit"
               >
-                {status === 'saving' ? 'Saving\u2026' : existing ? 'Save' : 'Create'}
+                {status === 'saving'
+                  ? 'Saving\u2026'
+                  : status === 'saved'
+                    ? 'Saved'
+                    : existing
+                      ? 'Save'
+                      : 'Create'}
               </button>
               {canPreview ? (
                 <button
-                  disabled={status === 'saving' || previewAction === 'exiting'}
+                  className={
+                    preview.expiresAt && isPreviewDirty ? 'pith-editor-preview-update' : ''
+                  }
+                  disabled={status === 'saving' || (preview.expiresAt ? !isPreviewDirty : false)}
                   onClick={() => {
                     if (preview.expiresAt) {
-                      void exitPreview();
+                      updatePreviewRef.current?.();
                     } else {
                       void previewEntry();
                     }
                   }}
                   type="button"
                 >
-                  {previewAction === 'exiting'
-                    ? 'Exiting\u2026'
-                    : preview.expiresAt
-                      ? 'Exit preview'
-                      : 'Preview'}
+                  {preview.expiresAt ? 'Update Preview' : 'Preview'}
                 </button>
               ) : null}
               {existing && canDelete ? (
@@ -695,6 +730,16 @@ export function EditorEntryForm({
                   </button>
                   <button onClick={() => setConfirmingDelete(false)} type="button">
                     Cancel
+                  </button>
+                </div>
+              </section>
+            ) : null}
+            {showSaved ? (
+              <section aria-live="polite" className="pith-editor-saved" role="status">
+                <p>Entry saved.</p>
+                <div className="pith-editor-actions">
+                  <button onClick={() => setShowSaved(false)} type="button">
+                    Dismiss
                   </button>
                 </div>
               </section>
@@ -794,7 +839,7 @@ function displayConflictValue(value: unknown): string {
 }
 
 export function EditorPreviewControls({ apiBasePath }: { readonly apiBasePath: string }) {
-  const { preview, setPreview, previewWindowRef, isPreviewDirty, updatePreviewRef } = usePreview();
+  const { preview, setPreview, previewWindowRef } = usePreview();
 
   useEffect(() => {
     let active = true;
@@ -862,13 +907,6 @@ export function EditorPreviewControls({ apiBasePath }: { readonly apiBasePath: s
         <time dateTime={preview.expiresAt}>{preview.expiresAt}</time>
       </span>
       <span className="pith-editor-preview-bar-buttons">
-        <button
-          disabled={!isPreviewDirty}
-          onClick={() => updatePreviewRef.current?.()}
-          type="button"
-        >
-          Update
-        </button>
         {preview.url ? (
           <a
             href={preview.url}
@@ -898,6 +936,14 @@ export function EditorPreviewControls({ apiBasePath }: { readonly apiBasePath: s
             View
           </a>
         ) : null}
+        <button
+          onClick={() => {
+            void disablePreview(apiBasePath, previewWindowRef, setPreview);
+          }}
+          type="button"
+        >
+          Exit
+        </button>
       </span>
     </section>
   );
@@ -975,20 +1021,21 @@ interface EditorFieldControlProps {
   readonly field: EditorField;
   readonly value: unknown;
   readonly path: readonly (string | number)[];
-  readonly error?: string;
+  readonly errors: Readonly<Record<string, string>>;
   readonly disabled?: boolean;
-  readonly onChange: (value: unknown) => void;
+  readonly onChange: (value: unknown, changedPath: readonly (string | number)[]) => void;
 }
 
 function EditorFieldControl({
   field,
   value,
   path,
-  error,
+  errors,
   disabled = false,
   onChange,
 }: EditorFieldControlProps) {
   const id = `pith-field-${path.join('-')}`;
+  const error = errors[path.join('.')];
   const label = field.options.label ?? humanize(field.name);
   const required = field.options.required === true;
 
@@ -996,11 +1043,14 @@ function EditorFieldControl({
     const objectValue = isRecord(value) ? value : {};
     const [collapsed, setCollapsed] = useState(false);
     const headerRef = useRef<HTMLLegendElement>(null);
+    const errorPrefix = `${path.join('.')}.`;
+    const nestedErrors = Object.entries(errors).filter(([name]) => name.startsWith(errorPrefix));
 
     return (
       <fieldset className="pith-editor-group">
         <legend
           className="pith-editor-group-header"
+          aria-expanded={!collapsed}
           onClick={() => setCollapsed((v) => !v)}
           ref={headerRef}
           role="button"
@@ -1017,13 +1067,23 @@ function EditorFieldControl({
           </span>
         </legend>
         {field.options.description ? <p>{field.options.description}</p> : null}
+        {collapsed && nestedErrors.length > 0 ? (
+          <p className="pith-editor-field-error" role="alert">
+            {nestedErrors.length === 1
+              ? nestedErrors[0]![1]
+              : `${nestedErrors.length} fields in ${label} need attention.`}
+          </p>
+        ) : null}
         {!collapsed ? (
           <div className="pith-editor-group-body">
             {field.options.fields?.map((child) => (
               <EditorFieldControl
+                errors={errors}
                 field={child}
                 key={child.name}
-                onChange={(nextValue) => onChange({ ...objectValue, [child.name]: nextValue })}
+                onChange={(nextValue, changedPath) =>
+                  onChange({ ...objectValue, [child.name]: nextValue }, changedPath)
+                }
                 path={[...path, child.name]}
                 value={objectValue[child.name]}
               />
@@ -1047,12 +1107,14 @@ function EditorFieldControl({
               <div className="pith-editor-list-item" key={`${id}-${index}`}>
                 <div className="pith-editor-list-item-content">
                   <EditorFieldControl
+                    errors={errors}
                     field={{ ...itemField, name: `${field.name}-${index}` }}
-                    onChange={(nextValue) =>
+                    onChange={(nextValue, changedPath) =>
                       onChange(
                         items.map((current, currentIndex) =>
                           currentIndex === index ? nextValue : current,
                         ),
+                        changedPath,
                       )
                     }
                     path={[...path, index]}
@@ -1061,7 +1123,12 @@ function EditorFieldControl({
                 </div>
                 <button
                   className="pith-editor-list-item-remove"
-                  onClick={() => onChange(items.filter((_, itemIndex) => itemIndex !== index))}
+                  onClick={() =>
+                    onChange(
+                      items.filter((_, itemIndex) => itemIndex !== index),
+                      path,
+                    )
+                  }
                   type="button"
                   aria-label={`Remove ${label} item ${index + 1}`}
                 >
@@ -1073,7 +1140,7 @@ function EditorFieldControl({
             ))
           : null}
         {itemField ? (
-          <button onClick={() => onChange([...items, defaultValue(itemField)])} type="button">
+          <button onClick={() => onChange([...items, defaultValue(itemField)], path)} type="button">
             Add item
           </button>
         ) : null}
@@ -1090,7 +1157,7 @@ function EditorFieldControl({
             checked={value === true}
             disabled={disabled}
             id={id}
-            onChange={(event) => onChange(event.target.checked)}
+            onChange={(event) => onChange(event.target.checked, path)}
             type="checkbox"
           />
           {label}
@@ -1113,11 +1180,19 @@ function EditorFieldControl({
 
   return (
     <div className="pith-editor-field">
-      <label htmlFor={id}>
+      <label htmlFor={id} id={`${id}-label`} onClick={() => document.getElementById(id)?.focus()}>
         {label}
         {required ? ' *' : ''}
       </label>
-      {renderPrimitiveControl(field, value, id, describedBy, disabled, onChange)}
+      {renderPrimitiveControl(
+        field,
+        value,
+        id,
+        describedBy,
+        error !== undefined,
+        disabled,
+        (nextValue) => onChange(nextValue, path),
+      )}
       {field.options.description ? <p id={`${id}-help`}>{field.options.description}</p> : null}
       {error ? (
         <p className="pith-editor-field-error" id={`${id}-error`} role="alert">
@@ -1145,6 +1220,7 @@ function renderPrimitiveControl(
   value: unknown,
   id: string,
   describedBy: string | undefined,
+  invalid: boolean,
   disabled: boolean,
   onChange: (value: unknown) => void,
 ) {
@@ -1196,7 +1272,43 @@ function renderPrimitiveControl(
     );
   }
 
-  if (field.kind === 'markdown' || (field.kind === 'text' && field.options.multiline)) {
+  if (field.kind === 'markdown') {
+    const markdownValue = typeof value === 'string' ? value : '';
+
+    return (
+      <Suspense
+        fallback={
+          <textarea
+            aria-describedby={describedBy}
+            disabled={disabled}
+            id={id}
+            maxLength={field.options.maxLength}
+            minLength={field.options.minLength}
+            onChange={(event) => onChange(event.target.value)}
+            required={field.options.required}
+            rows={16}
+            value={markdownValue}
+          />
+        }
+      >
+        <MarkdownEditor
+          describedBy={describedBy}
+          disabled={disabled}
+          id={id}
+          invalid={invalid}
+          labelId={`${id}-label`}
+          maxLength={field.options.maxLength}
+          minLength={field.options.minLength}
+          onChange={onChange}
+          profile={field.options.editor}
+          required={field.options.required}
+          value={markdownValue}
+        />
+      </Suspense>
+    );
+  }
+
+  if (field.kind === 'text' && field.options.multiline) {
     return (
       <textarea
         aria-describedby={describedBy}
@@ -1206,7 +1318,7 @@ function renderPrimitiveControl(
         minLength={field.options.minLength}
         onChange={(event) => onChange(event.target.value)}
         required={field.options.required}
-        rows={field.kind === 'markdown' ? 16 : 5}
+        rows={5}
         value={typeof value === 'string' ? value : ''}
       />
     );
@@ -1373,42 +1485,9 @@ export function EditorThemeToggle() {
   );
 }
 
-function Token({
-  kw,
-  str,
-  id,
-  jsx,
-  children,
-}: {
-  readonly kw?: boolean;
-  readonly str?: boolean;
-  readonly id?: boolean;
-  readonly jsx?: boolean;
-  readonly children: ReactNode;
-}) {
-  const className = kw ? 't-kw' : str ? 't-str' : id ? 't-id' : jsx ? 't-jsx' : undefined;
-  return className ? <span className={className}>{children}</span> : <>{children}</>;
-}
-
-export function MissingThemeScriptBanner({ docsUrl }: { readonly docsUrl?: string }) {
+export function MissingThemeScriptBanner({ docsUrl }: { readonly docsUrl: string }) {
   const dismissKey = 'pith-editor-theme-banner-dismissed';
   const [visible, setVisible] = useState(false);
-  const [copied, setCopied] = useState(false);
-
-  const snippet = [
-    `import { ThemeScript } from "./(cms)/_components/theme-script";`,
-    '',
-    `export default function RootLayout({ children }) {`,
-    `  return (`,
-    `    <html lang="en" suppressHydrationWarning>`,
-    `      <head>`,
-    `        <ThemeScript />`,
-    `      </head>`,
-    `      <body>{children}</body>`,
-    `    </html>`,
-    `  );`,
-    `}`,
-  ].join('\n');
 
   useEffect(() => {
     const hasTheme = document.documentElement.hasAttribute('data-theme');
@@ -1423,81 +1502,34 @@ export function MissingThemeScriptBanner({ docsUrl }: { readonly docsUrl?: strin
     }
   }, []);
 
-  const handleCopy = () => {
-    void navigator.clipboard?.writeText(snippet).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
-  };
-
   if (!visible) {
     return null;
   }
 
   return (
-    <div className="pith-editor-theme-banner">
-      <div className="pith-editor-theme-banner-body">
-        <p>
-          The theme script is not configured — the editor may not render correctly. Add the&nbsp;
-          <code>ThemeScript</code> component to your root layout&rsquo;s <code>&lt;head&gt;</code>:
-        </p>
-        <div className="pith-editor-theme-banner-code-wrapper">
-          <pre>
-            <code>
-              <Token kw>import</Token>
-              {' { '}
-              <Token id>ThemeScript</Token>
-              {' } '}
-              <Token str>"./(cms)/_components/theme-script"</Token>
-              {';\n\n'}
-              <Token kw>export default function</Token> <Token id>RootLayout</Token>
-              {'({ children }) {\n'}
-              {'  '}
-              <Token kw>return</Token>
-              {' (\n'}
-              {'    '}
-              <Token jsx>&lt;html lang="en" suppressHydrationWarning&gt;</Token>
-              {'\n      '}
-              <Token jsx>&lt;head&gt;</Token>
-              {'\n        '}
-              <Token jsx>&lt;ThemeScript /&gt;</Token>
-              {'\n      '}
-              <Token jsx>&lt;/head&gt;</Token>
-              {'\n      '}
-              <Token jsx>&lt;body&gt;{'{\\u0063hildren}'}&lt;/body&gt;</Token>
-              {'\n    '}
-              <Token jsx>&lt;/html&gt;</Token>
-              {'\n  );\n}'}
-            </code>
-          </pre>
-          <button className="pith-editor-theme-banner-copy" onClick={handleCopy} type="button">
-            {copied ? 'Copied' : 'Copy'}
-          </button>
-        </div>
-        {docsUrl ? (
-          <p>
-            <a href={docsUrl} target="_blank" rel="noopener">
-              See the documentation
-            </a>
-          </p>
-        ) : null}
-      </div>
-      <button
-        aria-label="Dismiss theme warning"
-        className="pith-editor-theme-banner-dismiss"
-        onClick={() => {
-          setVisible(false);
-          try {
-            sessionStorage.setItem(dismissKey, '1');
-          } catch {
-            /* noop */
-          }
-        }}
-        type="button"
-      >
-        Dismiss
-      </button>
-    </div>
+    <section aria-live="polite" className="pith-editor-theme-banner" role="status">
+      <span className="pith-editor-theme-banner-message">
+        <strong>Theme script not configured.</strong> The editor may not render correctly.
+      </span>
+      <span className="pith-editor-theme-banner-buttons">
+        <a href={`${docsUrl}/editor#dark-mode`} rel="noopener" target="_blank">
+          Docs
+        </a>
+        <button
+          onClick={() => {
+            setVisible(false);
+            try {
+              sessionStorage.setItem(dismissKey, '1');
+            } catch {
+              /* noop */
+            }
+          }}
+          type="button"
+        >
+          Dismiss
+        </button>
+      </span>
+    </section>
   );
 }
 
@@ -1516,6 +1548,7 @@ export function EditorSidebar({
   entries,
   currentEntry,
   version,
+  docsUrl,
 }: {
   readonly links: readonly SidebarLink[];
   readonly currentCollection?: string;
@@ -1525,6 +1558,7 @@ export function EditorSidebar({
   >;
   readonly currentEntry?: string;
   readonly version?: string;
+  readonly docsUrl: string;
 }) {
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState<Record<string, boolean>>(() => {
@@ -1596,7 +1630,14 @@ export function EditorSidebar({
             );
           })}
         </div>
-        {version ? <div className="pith-editor-sidebar-version">{version}</div> : null}
+        {version || docsUrl ? (
+          <div className="pith-editor-sidebar-version">
+            {version ? <span>{version}</span> : null}
+            <a className="pith-editor-sidebar-docs" href={docsUrl} rel="noopener" target="_blank">
+              Docs
+            </a>
+          </div>
+        ) : null}
       </nav>
     </>
   );
@@ -1695,6 +1736,85 @@ function normalizeEntryValue(
   return Object.fromEntries(
     fields.map((field) => [field.name, normalizeFieldValue(field, value[field.name])]),
   );
+}
+
+export function markdownFieldErrors(
+  fields: readonly EditorField[],
+  value: Record<string, unknown>,
+): Record<string, string> {
+  const errors: Record<string, string> = {};
+
+  function visit(
+    field: EditorField,
+    fieldValue: unknown,
+    path: readonly (string | number)[],
+  ): void {
+    if (field.kind === 'markdown') {
+      const name = path.join('.');
+      const label = field.options.label ?? humanize(field.name);
+
+      if (typeof fieldValue !== 'string') {
+        if (field.options.required) {
+          errors[name] = `${label} is required.`;
+        }
+        return;
+      }
+
+      if (field.options.required && fieldValue.length === 0) {
+        errors[name] = `${label} is required.`;
+      } else if (
+        field.options.minLength !== undefined &&
+        fieldValue.length < field.options.minLength
+      ) {
+        errors[name] = `${label} must contain at least ${field.options.minLength} characters.`;
+      } else if (
+        field.options.maxLength !== undefined &&
+        fieldValue.length > field.options.maxLength
+      ) {
+        errors[name] = `${label} must contain at most ${field.options.maxLength} characters.`;
+      }
+      return;
+    }
+
+    if (field.kind === 'object' && isRecord(fieldValue)) {
+      for (const child of field.options.fields ?? []) {
+        visit(child, fieldValue[child.name], [...path, child.name]);
+      }
+      return;
+    }
+
+    if (field.kind === 'list' && Array.isArray(fieldValue) && field.options.item) {
+      const itemField = field.options.item;
+      fieldValue.forEach((item, index) => visit(itemField, item, [...path, index]));
+    }
+  }
+
+  for (const field of fields) {
+    visit(field, value[field.name], [field.name]);
+  }
+
+  return errors;
+}
+
+function updateFieldErrors(
+  errors: Readonly<Record<string, string>>,
+  field: EditorField,
+  value: unknown,
+  changedPath: readonly (string | number)[],
+): Record<string, string> {
+  const name = changedPath.join('.');
+  const prefix = `${name}.`;
+  const remaining = Object.entries(errors).filter(
+    ([errorName]) => errorName !== name && !errorName.startsWith(prefix),
+  );
+  const currentMarkdownErrors = Object.entries(
+    markdownFieldErrors([field], { [field.name]: value }),
+  ).filter(([errorName]) => errorName === name || errorName.startsWith(prefix));
+  const next = Object.fromEntries([...remaining, ...currentMarkdownErrors]);
+  return Object.keys(next).length === Object.keys(errors).length &&
+    Object.entries(next).every(([errorName, message]) => errors[errorName] === message)
+    ? errors
+    : next;
 }
 
 function normalizeFieldValue(field: EditorField, value: unknown): unknown {

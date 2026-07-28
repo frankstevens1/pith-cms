@@ -63,17 +63,17 @@ and lists infer recursively.
 
 ## Fields
 
-| Kind                    | Value                  | Useful options                                    |
-| ----------------------- | ---------------------- | ------------------------------------------------- |
-| `text`                  | string                 | `required`, `minLength`, `maxLength`, `multiline` |
-| `number`                | number                 | `min`, `max`, `integer`                           |
-| `boolean`               | boolean                | `defaultValue`                                    |
-| `date`                  | `YYYY-MM-DD` string    | `required`, `defaultValue`                        |
-| `datetime`              | UTC ISO 8601 string    | `required`, `defaultValue`                        |
-| `slug`, `url`, `email`  | string                 | `required`; slug can declare `source`             |
-| `select`, `multiselect` | option value or values | `options`, `defaultValue`                         |
-| `markdown`              | string                 | Exactly one body field in a Markdown collection   |
-| `object`, `list`        | nested value           | `fields` or `item`                                |
+| Kind                    | Value                  | Useful options                                      |
+| ----------------------- | ---------------------- | --------------------------------------------------- |
+| `text`                  | string                 | `required`, `minLength`, `maxLength`, `multiline`   |
+| `number`                | number                 | `min`, `max`, `integer`                             |
+| `boolean`               | boolean                | `defaultValue`                                      |
+| `date`                  | `YYYY-MM-DD` string    | `required`, `defaultValue`                          |
+| `datetime`              | UTC ISO 8601 string    | `required`, `defaultValue`                          |
+| `slug`, `url`, `email`  | string                 | `required`; slug can declare `source`               |
+| `select`, `multiselect` | option value or values | `options`, `defaultValue`                           |
+| `markdown`              | string                 | One body field; optional `editor` authoring profile |
+| `object`, `list`        | nested value           | `fields` or `item`                                  |
 
 ## Formats
 
@@ -87,6 +87,10 @@ definition order, and unknown keys are rejected during validation.
 Markdown collections store entries as `.md` files. Non-body fields live in YAML
 frontmatter. Exactly one `field.markdown()` holds the document body. Dates and
 datetimes stay strings so content stays portable and deterministic.
+
+`field.markdown({ editor: { dialect, features } })` can declare the Markdown constructs supported by
+the consumer's frontend. This metadata only configures authoring controls and diagnostics; it does
+not change validation, serialization, or rendering. See [Editor and preview](./editor.md#markdown-authoring).
 
 `createSlug('Building Pith')` returns `building-pith`. Use it with
 `field.slug({ source: 'title' })` to auto-generate slugs from another field.

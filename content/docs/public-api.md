@@ -19,14 +19,14 @@ import { definePith, defineCollection, field } from '@pith-cms/core';
 import type { InferCollectionEntry, PithConfig } from '@pith-cms/core';
 ```
 
-| Category       | Exports                                                                                                                    |
-| -------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| Configuration  | `definePith`, `defineCollection`, `field`, `PithConfig`, `CollectionDefinition`, `FieldDefinition`, `InferCollectionEntry` |
-| Content        | `createContentService`, `validateEntry`, `createDefaultEntry`, `createSlug`, `getEntryPath`                                |
-| Serialization  | `parseJsonEntry`, `serializeJsonEntry`, `parseMarkdownEntry`, `serializeMarkdownEntry`                                     |
-| Path utilities | `normalizeContentPath`, `normalizeIdentifier`, `getCollectionDirectory`, `getIdentifierFromEntryPath`                      |
-| Contracts      | `ContentRepository`, `ContentEntry`, repository file/write/delete types, validation result types, capability guards        |
-| Errors         | Pith domain error classes and their stable `code` values                                                                   |
+| Category       | Exports                                                                                                                                                                                                                 |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Configuration  | `definePith`, `defineCollection`, `field`, `PithConfig`, `CollectionDefinition`, `FieldDefinition`, `MarkdownFieldOptions`, `MarkdownEditorOptions`, `MarkdownDialect`, `MarkdownEditorFeature`, `InferCollectionEntry` |
+| Content        | `createContentService`, `validateEntry`, `createDefaultEntry`, `createSlug`, `getEntryPath`                                                                                                                             |
+| Serialization  | `parseJsonEntry`, `serializeJsonEntry`, `parseMarkdownEntry`, `serializeMarkdownEntry`                                                                                                                                  |
+| Path utilities | `normalizeContentPath`, `normalizeIdentifier`, `getCollectionDirectory`, `getIdentifierFromEntryPath`                                                                                                                   |
+| Contracts      | `ContentRepository`, `ContentEntry`, repository file/write/delete types, validation result types, capability guards                                                                                                     |
+| Errors         | Pith domain error classes and their stable `code` values                                                                                                                                                                |
 
 Path utilities resolve logical paths — they do not resolve native filesystem paths.
 

@@ -73,6 +73,8 @@ for (const packageName of packageNames) {
 assertTarballIncludes('@pith-cms/next', 'package/dist/editor.css');
 assertTarballIncludes('@pith-cms/next', 'package/dist/editor-client.js');
 assertTarballIncludes('@pith-cms/next', 'package/dist/editor-client.d.ts');
+assertTarballIncludes('@pith-cms/next', 'package/dist/markdown-editor.js');
+assertTarballIncludes('@pith-cms/next', 'package/dist/markdown-editor.d.ts');
 assertTarballIncludes('@pith-cms/next', 'package/dist/preview-banner.js');
 assertTarballIncludes('@pith-cms/next', 'package/dist/preview-banner.d.ts');
 assertTarballIncludes('@pith-cms/cli', 'package/dist/cli.js');

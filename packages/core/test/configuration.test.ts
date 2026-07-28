@@ -113,6 +113,78 @@ describe('Pith configuration', () => {
     ).toThrow(ConfigurationError);
   });
 
+  it('accepts a declared Markdown editor profile', () => {
+    expect(() =>
+      definePith({
+        contentRoot: 'content',
+        collections: {
+          posts: defineCollection({
+            path: 'posts',
+            format: 'markdown',
+            identifierField: 'slug',
+            fields: {
+              slug: field.slug({ required: true }),
+              body: field.markdown({
+                required: true,
+                editor: {
+                  dialect: 'gfm',
+                  features: ['heading-2', 'strong', 'unordered-list', 'task-list'],
+                },
+              }),
+            },
+          }),
+        },
+      }),
+    ).not.toThrow();
+
+    expect(() =>
+      definePith({
+        contentRoot: 'content',
+        collections: {
+          posts: defineCollection({
+            path: 'posts',
+            format: 'markdown',
+            identifierField: 'slug',
+            fields: {
+              slug: field.slug({ required: true }),
+              body: field.markdown({
+                editor: {
+                  dialect: 'gfm',
+                  features: ['ordered-list', 'task-list'],
+                },
+              }),
+            },
+          }),
+        },
+      }),
+    ).not.toThrow();
+  });
+
+  it.each([
+    ['an unsupported dialect', { dialect: 'mdx', features: [] }],
+    ['an unsupported feature', { features: ['video'] }],
+    ['duplicate features', { features: ['strong', 'strong'] }],
+    ['GFM features in CommonMark', { features: ['table'] }],
+    ['task lists without a list style', { dialect: 'gfm', features: ['task-list'] }],
+  ])('rejects Markdown editor profiles with %s', (_name, editor) => {
+    expect(() =>
+      definePith({
+        contentRoot: 'content',
+        collections: {
+          posts: defineCollection({
+            path: 'posts',
+            format: 'markdown',
+            identifierField: 'slug',
+            fields: {
+              slug: field.slug({ required: true }),
+              body: field.markdown({ editor } as never),
+            },
+          }),
+        },
+      }),
+    ).toThrow(ConfigurationError);
+  });
+
   it('accepts scalar display fields and rejects missing or nested display fields', () => {
     expect(() =>
       definePith({

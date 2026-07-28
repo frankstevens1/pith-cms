@@ -86,6 +86,7 @@ export async function initCommand(options: InitOptions): Promise<void> {
   const themeScriptCode = generateThemeScript();
   const themeToggleCode = generateThemeToggle();
   const cmsLayoutCode = generateCmsLayout();
+  const proxyCode = generateProxy();
 
   steps.push('Generate pith.config.ts');
   files.push({
@@ -131,6 +132,12 @@ export async function initCommand(options: InitOptions): Promise<void> {
   files.push({
     path: resolve(projectRoot, contentRoot, 'pages', '.gitkeep'),
     content: '',
+  });
+
+  steps.push('Generate preview cache proxy (proxy.ts)');
+  files.push({
+    path: resolve(projectRoot, 'proxy.ts'),
+    content: proxyCode,
   });
 
   installPackages.push('@pith-cms/core@latest', '@pith-cms/next@latest', 'server-only');
@@ -462,6 +469,25 @@ function generateCmsLayout(): string {
   ].join('\n');
 }
 
+function generateProxy(): string {
+  return [
+    `import { NextResponse } from 'next/server';`,
+    `import type { NextRequest } from 'next/server';`,
+    '',
+    `export function proxy(request: NextRequest) {`,
+    `  if (request.cookies.has('pith_preview')) {`,
+    `    const response = NextResponse.next();`,
+    `    response.headers.set(`,
+    `      'Cache-Control',`,
+    `      'no-cache, no-store, must-revalidate',`,
+    `    );`,
+    `    return response;`,
+    `  }`,
+    `}`,
+    '',
+  ].join('\n');
+}
+
 function printPostInit(storage: string): void {
   printLine();
   printLine('Pith initialization complete.');
@@ -496,6 +522,17 @@ function printPostInit(storage: string): void {
   printLine();
   printLine('     Next.js logs API requests in development (including background preview');
   printLine('     polling). These are normal and do not indicate a problem.');
+  printLine();
+  printLine('     Preview mode uses a cache-busting proxy. If proxy.ts was');
+  printLine('     not generated because one already exists, add this snippet to your');
+  printLine('     existing proxy function:');
+  printLine();
+  printLine("       if (request.cookies.has('pith_preview')) {");
+  printLine('         const response = NextResponse.next();');
+  printLine("         response.headers.set('Cache-Control',");
+  printLine("           'no-cache, no-store, must-revalidate');");
+  printLine('         return response;');
+  printLine('       }');
   printLine();
 }
 
