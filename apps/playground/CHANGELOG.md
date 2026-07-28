@@ -1,5 +1,15 @@
 # pith-playground
 
+## 0.0.5
+
+### Patch Changes
+
+- Updated dependencies [527063c]
+  - @pith-cms/core@0.3.0
+  - @pith-cms/next@0.3.0
+  - @pith-cms/storage-filesystem@0.3.0
+  - @pith-cms/storage-github@0.3.0
+
 ## 0.0.4
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@pith-cms/next",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Typed server-only Next.js App Router reads, editor, preview, and caching for Pith.",
   "license": "MIT",
   "keywords": [
