@@ -1,6 +1,6 @@
 {
   "name": "@pith-cms/typescript-config",
-  "version": "0.0.0",
+  "version": "0.2.1",
   "private": true,
   "files": [
     "base.json",
