@@ -1,0 +1,3 @@
+# @pith-cms/eslint-config
+
+## 0.2.1

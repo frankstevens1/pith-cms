@@ -1,5 +1,15 @@
 # pith-docs
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies [ef0cf1d]
+  - @pith-cms/next@0.2.1
+  - @pith-cms/core@0.2.1
+  - @pith-cms/storage-filesystem@0.2.1
+  - @pith-cms/storage-github@0.2.1
+
 ## 0.0.2
 
 ### Patch Changes

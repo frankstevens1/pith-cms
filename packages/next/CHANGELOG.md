@@ -1,5 +1,12 @@
 # @pith-cms/next
 
+## 0.2.1
+
+### Patch Changes
+
+- ef0cf1d: Focus editor tab when preview is exited, and set fixed versioning for all @pith-cms packages.
+  - @pith-cms/core@0.2.1
+
 ## 0.2.0
 
 ### Minor Changes

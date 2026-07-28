@@ -1,5 +1,13 @@
 # @pith-cms/cli
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [ef0cf1d]
+  - @pith-cms/next@0.2.1
+  - @pith-cms/core@0.2.1
+
 ## 0.1.3
 
 ### Patch Changes
